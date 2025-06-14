@@ -11,7 +11,7 @@ export async function connectToDB() {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, {
-      dbName: "grabvocab",
+      dbName: "dictionary",
     });
   }
 

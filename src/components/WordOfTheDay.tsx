@@ -94,7 +94,7 @@ export default function WordOfTheDay() {
 
         <button
           onClick={() => router.push(`/word/${wordData.word}`)}
-          className="mt-6 py-2 hover:text-white bg-transparent border-indigo-600 hover:bg-indigo-700 rounded-lg transition duration-200 text-sm self-start"
+          className="mt-6 py-2 px-4 border border-indigo-600 hover:text-white hover:bg-indigo-700 rounded-lg transition duration-200 text-sm self-start"
         >
           See Full Definition
         </button>
