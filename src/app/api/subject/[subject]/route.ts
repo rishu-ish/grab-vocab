@@ -1,19 +1,21 @@
 // app/api/subject/[subject]/route.ts
+
 import { connectToDB } from "@/lib/mongodb";
 import { getSubjectWords } from "@/lib/subject-utils";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { subject: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
     await connectToDB();
 
-    const subject = params.subject;
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    const url = req.nextUrl;
+    const subject = url.pathname.split("/").pop(); // Extract the subject from the path
+    const page = parseInt(url.searchParams.get("page") || "1");
+    const limit = parseInt(url.searchParams.get("limit") || "10");
+
+    if (!subject) {
+      return NextResponse.json({ success: false, error: "Subject is required." }, { status: 400 });
+    }
 
     const data = await getSubjectWords(subject, page, limit);
 
