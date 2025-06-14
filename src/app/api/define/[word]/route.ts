@@ -3,13 +3,17 @@ import { connectToDB } from "@/lib/mongodb";
 import Word from "@/models/Word";
 import { getWordDetails } from "@/lib/word-utils";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { word: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
     await connectToDB();
-    const term = params.word.toLowerCase();
+
+    // Extract "word" param from URL
+    const pathname = req.nextUrl.pathname; // e.g., /api/define/limerence
+    const term = pathname.split("/").pop()?.toLowerCase();
+
+    if (!term) {
+      return NextResponse.json({ error: "Word is required" }, { status: 400 });
+    }
 
     const existing = await Word.findOne({ word: term });
 
