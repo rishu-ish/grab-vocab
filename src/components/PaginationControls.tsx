@@ -34,7 +34,7 @@ export default function PaginationControls({ page, setPage, limit, setLimit, tot
       </div>
       <div className="flex items-center gap-4">
         <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
           onClick={handlePrev}
           disabled={page === 1}
         >
@@ -44,7 +44,7 @@ export default function PaginationControls({ page, setPage, limit, setLimit, tot
           Page {page} of {totalPages}
         </span>
         <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
           onClick={handleNext}
           disabled={page === totalPages}
         >

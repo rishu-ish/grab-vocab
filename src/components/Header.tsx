@@ -210,7 +210,7 @@ function HeaderButton({ label }: { label: string }) {
 
   const handleClick = () => {
     if (label === "Dictionary A-Z") {
-      router.push("/allWords");
+      router.push("/dictionary");
     } else if (label === "Login / Signup") {
       router.push("/auth");
     }
