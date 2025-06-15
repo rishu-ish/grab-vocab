@@ -15,7 +15,6 @@ export default function Header() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLUListElement>(null);
-  const [subject] = useState("Subject");
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const toggleDropdown = (label: string) => {
@@ -61,10 +60,8 @@ export default function Header() {
     fetchSuggestions();
   }, [query]);
 
-  const handleSelectSubject = (subItem: string) => {
-    // localStorage.setItem("selectedSubject", subItem);
-    // setSubject(subItem); // ✅ This updates the label dynamically
-    router.push(`/subject/${subItem}`);
+  const handleSelectSubject = (value: string, type: "subject" | "grades") => {
+    router.push(`/${type}/${value}`);
   };
 
   const handleBlur = () => {
@@ -75,19 +72,36 @@ export default function Header() {
     {
       label: "Subject",
       dropdown: [
-        "English",
-        "Geography",
-        "History",
-        "Chemistry",
-        "Biology",
-        "Physics",
-        "Mathematics",
-        "Psychology",
-        "Sociology",
-        "Political",
+        { label: "English", value: "english" },
+        { label: "Geography", value: "geography" },
+        { label: "History", value: "history" },
+        { label: "Chemistry", value: "chemistry" },
+        { label: "Biology", value: "biology" },
+        { label: "Physics", value: "physics" },
+        { label: "Mathematics", value: "mathematics" },
+        { label: "Psychology", value: "psychology" },
+        { label: "Sociology", value: "sociology" },
+        { label: "Political", value: "political" },
+        // Add more subjects as needed
       ], // dropdown items
     },
-    "Grades",
+    {
+      label: "Grades",
+      dropdown: [
+        { label: "Grade 1", value: "grade-1" },
+        { label: "Grade 2", value: "grade-2" },
+        { label: "Grade 3", value: "grade-3" },
+        { label: "Grade 4", value: "grade-4" },
+        { label: "Grade 5", value: "grade-5" },
+        { label: "Grade 6", value: "grade-6" },
+        { label: "Grade 7", value: "grade-7" },
+        { label: "Grade 8", value: "grade-8" },
+        { label: "Grade 9", value: "grade-9" },
+        { label: "Grade 10", value: "grade-10" },
+        { label: "Grade 11", value: "grade-11" },
+        { label: "Grade 12", value: "grade-12" },
+      ], // dropdown items
+    },
     "Quiz",
     "Dictionary A-Z",
     "Test",
@@ -99,7 +113,7 @@ export default function Header() {
       {/* Top Section */}
       <div className="flex flex-col px-4 py-3 gap-3">
         <h1
-          className="text-4xl text-amber-50 font-bold text-center text-accent cursor-pointer"
+          className="text-4xl text-gray-900 font-bold text-center text-accent cursor-pointer"
           onClick={() => router.push("/")}
           style={{ fontFamily: "initial" }}
         >
@@ -168,7 +182,7 @@ export default function Header() {
           ) : (
             <div key={item.label} className="relative">
               <div onClick={() => toggleDropdown(item.label)}>
-                <HeaderButton label={subject || item.label} />
+                <HeaderButton label={item.label} />
               </div>
 
               {openDropdown === item.label && (
@@ -178,11 +192,16 @@ export default function Header() {
                 >
                   {item.dropdown.map((subItem) => (
                     <div
-                      key={subItem}
+                      key={subItem.value}
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer whitespace-nowrap"
-                      onClick={() => handleSelectSubject(subItem)}
+                      onClick={() =>
+                        handleSelectSubject(
+                          subItem.value,
+                          item.label.toLowerCase() as "subject" | "grades"
+                        )
+                      }
                     >
-                      {subItem}
+                      {subItem.label}
                     </div>
                   ))}
                 </div>

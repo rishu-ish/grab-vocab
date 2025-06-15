@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import PaginationControls from "@/components/PaginationControls";
-import SubjectWordDetailsDisplay from "./SubjectWordDisplay";
 import axios from "axios";
+import SubjectWordDetailsDisplay from "./SubjectWordDisplay";
 
 interface WordResult {
   word: string;
@@ -19,11 +19,11 @@ interface WordResult {
   imageURL?: string;
 }
 
-interface SubjectWordsListProps {
-  subject: string;
+interface GradeWordsListProps {
+  Grade: string;
 }
 
-export default function SubjectWordsList({ subject }: SubjectWordsListProps) {
+export default function GradeWordsList({ Grade }: GradeWordsListProps) {
   const [words, setWords] = useState<WordResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -34,26 +34,26 @@ export default function SubjectWordsList({ subject }: SubjectWordsListProps) {
     const fetchWords = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`/api/subject/${subject}`, {
+        const res = await axios.get(`/api/grade/${Grade}`, {
           params: { page, limit },
         });
         setWords(res.data.words || []);
         setTotalPages(res.data.totalPages || 1);
       } catch (err: any) {
         if (err.response?.status === 404) {
-          console.warn("⚠️ Subject not found:", subject);
+          console.warn("⚠️ Grade not found:", Grade);
           setWords([]);
           setTotalPages(1);
         } else {
-          console.error("❌ Error fetching subject words:", err);
+          console.error("❌ Error fetching Grade words:", err);
         }
       } finally {
         setLoading(false);
       }
     };
 
-    if (subject) fetchWords();
-  }, [subject, page, limit]);
+    if (Grade) fetchWords();
+  }, [Grade, page, limit]);
 
   if (loading) return <div className="p-4">Loading words...</div>;
 
@@ -75,7 +75,7 @@ export default function SubjectWordsList({ subject }: SubjectWordsListProps) {
         ))
       ) : (
         <p className="text-center text-red-500 mt-4">
-          No words found for this subject.
+          No words found for this Grade.
         </p>
       )}
 
