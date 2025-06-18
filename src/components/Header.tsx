@@ -72,7 +72,7 @@ export default function Header() {
     {
       label: "Subject",
       dropdown: [
-        { label: "English", value: "english" },
+        { label: "English Literature", value: "english-literature" },
         { label: "Geography", value: "geography" },
         { label: "History", value: "history" },
         { label: "Chemistry", value: "chemistry" },
@@ -81,7 +81,7 @@ export default function Header() {
         { label: "Mathematics", value: "mathematics" },
         { label: "Psychology", value: "psychology" },
         { label: "Sociology", value: "sociology" },
-        { label: "Political", value: "political" },
+        { label: "Political Science", value: "political-science" },
         // Add more subjects as needed
       ], // dropdown items
     },
