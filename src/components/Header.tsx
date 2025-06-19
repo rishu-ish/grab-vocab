@@ -232,6 +232,15 @@ function HeaderButton({ label }: { label: string }) {
       router.push("/dictionary");
     } else if (label === "Login / Signup") {
       router.push("/auth");
+    } else if (label === "Quiz") {
+      router.push("/quiz");
+    } else if (label === "Test") {
+      router.push("/test");
+    } else if (label === "About Us") {
+      router.push("/about");
+    } else {
+      // For other labels, you can define specific routes or actions
+      console.log(`Clicked on ${label}`);
     }
   };
 
