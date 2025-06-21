@@ -61,6 +61,12 @@ export default function QuickQuizPage() {
     fetchQuiz();
   };
 
+  const nextQuiz = () => {
+    resetQuiz();
+    setLoading(true);
+    fetchQuiz();
+  };
+
   if (loading) return <p className="p-6 text-gray-700">Loading quiz...</p>;
 
   return (
@@ -119,12 +125,18 @@ export default function QuickQuizPage() {
             ))}
           </div>
 
-          <div className="text-center mt-8">
+          <div className="mt-6 space-x-4">
             <button
               onClick={resetQuiz}
-              className="px-4 py-2 mt-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
             >
-              Retry Quiz
+              Retry Same Quiz
+            </button>
+            <button
+              onClick={nextQuiz}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              Next Quiz
             </button>
           </div>
         </div>
