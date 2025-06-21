@@ -8,12 +8,12 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { subject: string } }
-) {
+  context: { params: { subject: string } }
+)  {
   try {
     await connectToDB();
 
-    const subject = decodeURIComponent(params.subject);
+    const subject = decodeURIComponent(context.params.subject);
     const subjectEntry = await SubjectWords.findOne({
       subject: new RegExp(`^${subject}$`, "i"),
     });

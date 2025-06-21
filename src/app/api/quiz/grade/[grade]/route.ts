@@ -19,14 +19,11 @@ function shuffleArray(array: string[]) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { grade: string } }
+  context: { params: { grade: string } }
 ) {
   try {
     await connectToDB();
-    const url = req.nextUrl;
-    const grade = decodeURIComponent(
-      params.grade || url.pathname.split("/").pop() || ""
-    );
+    const grade = decodeURIComponent(context.params.grade);
 
     console.log("📘 Grade received:", grade);
 
