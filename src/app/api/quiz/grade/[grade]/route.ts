@@ -17,13 +17,12 @@ function shuffleArray(array: string[]) {
   return array.sort(() => Math.random() - 0.5);
 }
 
-export async function GET(
-  req: NextRequest,
-  context: { params: { grade: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
+    const url = req.nextUrl;
+    const grade = url.pathname.split("/").pop();
     await connectToDB();
-    const grade = decodeURIComponent(context.params.grade);
+    // const grade = decodeURIComponent(context.params.grade);
 
     console.log("📘 Grade received:", grade);
 
