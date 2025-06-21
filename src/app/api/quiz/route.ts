@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { connectToDB } from "@/lib/mongodb";
+import Word from "@/models/Word";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -7,9 +9,28 @@ const openai = new OpenAI({
 
 export async function GET() {
   try {
-    const prompt = `
-Generate a JSON array of 5 multiple-choice vocabulary quiz questions. Each object must follow this exact format:
+    await connectToDB();
 
+    // Step 1: Get total count of words in the DB
+    const totalCount = await Word.countDocuments();
+    if (totalCount < 5) {
+      return NextResponse.json({
+        success: false,
+        error: "Not enough words in the database.",
+      });
+    }
+
+    // Step 2: Sample 5 random words
+    const randomWords = await Word.aggregate([{ $sample: { size: 5 } }]);
+
+    // Step 3: Prepare words for prompt
+    const wordList = randomWords.map((w) => w.word).join(", ");
+
+    // Step 4: Send prompt to OpenAI
+    const prompt = `
+Generate 5 beginner-friendly multiple choice vocabulary questions for the following words: ${wordList}
+
+Each object must follow this exact JSON format:
 {
   "word": "string",
   "question": "string",
@@ -18,7 +39,12 @@ Generate a JSON array of 5 multiple-choice vocabulary quiz questions. Each objec
   "explanation": "string"
 }
 
-Use real, uncommon English words. Only return the array. Format must be strict JSON, no extra text.
+Rules:
+- Use simple definitions suitable for learners in grades 6–10.
+- Avoid technical, rare, or confusing words.
+- Make each option believable.
+- Explanations must be clear and brief.
+- Return ONLY a valid JSON array of 5 items.
 `;
 
     const response = await openai.chat.completions.create({
@@ -26,11 +52,26 @@ Use real, uncommon English words. Only return the array. Format must be strict J
       messages: [{ role: "user", content: prompt }],
     });
 
-    const content = response.choices[0].message.content ?? "";
+    function shuffleArray(array: string[]) {
+      return array.sort(() => Math.random() - 0.5);
+    }
 
-    const questions = JSON.parse(content);
+    const content = response.choices[0].message.content || "";
+    const quizData = JSON.parse(content);
 
-    return NextResponse.json({ success: true, data: questions });
+    // Step 5: Merge imageURL from DB into quiz questions
+    const enrichedQuiz = quizData.map((q: any) => {
+      const match = randomWords.find(
+        (w) => w.word.toLowerCase() === q.word.toLowerCase()
+      );
+      return {
+        ...q,
+        imageURL: match?.imageURL || null,
+        options: shuffleArray([...q.options]),
+      };
+    });
+
+    return NextResponse.json({ success: true, data: enrichedQuiz });
   } catch (err: any) {
     console.error("❌ Quiz API Error:", err.message);
     return NextResponse.json(

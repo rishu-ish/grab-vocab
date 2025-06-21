@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
       totalPages: Math.ceil(total / limit),
     });
   } catch (err: any) {
-    console.error("❌ Error in /api/admin/words:", err.message);
+    console.error("❌ Error in words:", err.message);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

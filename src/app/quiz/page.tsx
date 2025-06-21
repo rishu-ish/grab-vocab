@@ -1,25 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const dummyQuestions = [
-  {
-    word: "abate",
-    question: "What does the word 'abate' mean?",
-    options: ["to increase", "to lessen", "to hide", "to change"],
-    correctAnswer: "to lessen",
-    explanation: "'Abate' means to reduce in amount, degree, or intensity.",
-  },
-  {
-    word: "lucid",
-    question: "Which of the following best defines 'lucid'?",
-    options: ["confusing", "clear", "angry", "silent"],
-    correctAnswer: "clear",
-    explanation: "'Lucid' means expressed clearly and easy to understand.",
-  },
-];
+import { useEffect, useRef, useState } from "react";
 
 export default function QuickQuizPage() {
+  const hasFetched = useRef(false);
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
@@ -31,7 +15,10 @@ export default function QuickQuizPage() {
   const current = quiz[step];
 
   useEffect(() => {
-    fetchQuiz();
+    if (!hasFetched.current) {
+      fetchQuiz();
+      hasFetched.current = true;
+    }
   }, []);
 
   const fetchQuiz = async () => {
@@ -41,12 +28,11 @@ export default function QuickQuizPage() {
       if (data.success && Array.isArray(data.data)) {
         setQuiz(data.data);
       } else {
-        console.warn("Falling back to dummy quiz.");
-        setQuiz(dummyQuestions);
+        setQuiz([]);
       }
     } catch (err) {
       console.error("Error fetching quiz:", err);
-      setQuiz(dummyQuestions);
+      setQuiz([]);
     } finally {
       setLoading(false);
     }
@@ -67,12 +53,12 @@ export default function QuickQuizPage() {
   };
 
   const resetQuiz = () => {
-    setLoading(true);
-    fetchQuiz();
     setStep(0);
     setScore(0);
     setSelected(null);
     setShowResult(false);
+    setSelectedAnswers([]);
+    fetchQuiz();
   };
 
   if (loading) return <p className="p-6 text-gray-700">Loading quiz...</p>;
@@ -93,6 +79,13 @@ export default function QuickQuizPage() {
                 key={q.word}
                 className="p-4 border rounded-lg bg-white shadow-md"
               >
+                {q.imageURL && (
+                  <img
+                    src={q.imageURL}
+                    alt={q.word}
+                    className="w-full h-52 object-cover rounded-lg mb-4"
+                  />
+                )}
                 <p className="font-medium text-indigo-700 mb-2">
                   Q{index + 1}: {q.question}
                 </p>
@@ -136,17 +129,31 @@ export default function QuickQuizPage() {
           </div>
         </div>
       ) : (
-        <div>
-          <h2 className="text-xl mb-4">
+        <div className="bg-white border rounded-xl shadow-md p-4 md:p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">
             Q{step + 1}: {current.question}
           </h2>
-          <div className="space-y-3">
-            {current.options.map((opt: any) => (
-              <button
-                key={opt}
-                onClick={() => handleAnswer(opt)}
-                disabled={!!selected}
-                className={`w-full text-left px-4 py-3 rounded-lg border transition duration-200
+
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Image */}
+            {current.imageURL && (
+              <div className="w-full md:w-1/2">
+                <img
+                  src={current.imageURL}
+                  alt={current.word}
+                  className="w-full aspect-square object-cover rounded-lg"
+                />
+              </div>
+            )}
+
+            {/* Options */}
+            <div className="flex-1 space-y-3">
+              {current.options.map((opt: any) => (
+                <button
+                  key={opt}
+                  onClick={() => handleAnswer(opt)}
+                  disabled={!!selected}
+                  className={`w-full text-left px-4 py-3 rounded-lg border transition duration-200
                   ${
                     selected
                       ? opt === current.correctAnswer
@@ -156,12 +163,14 @@ export default function QuickQuizPage() {
                         : "bg-white"
                       : "bg-white hover:bg-indigo-100"
                   }`}
-              >
-                {opt}
-              </button>
-            ))}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
           </div>
 
+          {/* Explanation */}
           {selected && (
             <p className="mt-4 italic text-sm text-gray-600">
               Explanation: {current.explanation}

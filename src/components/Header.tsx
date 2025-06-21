@@ -233,7 +233,7 @@ function HeaderButton({ label }: { label: string }) {
     } else if (label === "Login / Signup") {
       router.push("/auth");
     } else if (label === "Quiz") {
-      router.push("/quiz");
+      router.push("/quiz/select");
     } else if (label === "Test") {
       router.push("/test");
     } else if (label === "About Us") {
