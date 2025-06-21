@@ -82,7 +82,7 @@ export default function SubjectQuizPage() {
   return (
     <div className="max-w-3xl mx-auto p-6 text-black">
       <h1 className="text-3xl font-bold mb-6 capitalize">
-        Subject Quiz: {subject}
+        Subject Quiz: {subject?.toString().replace("-", " ")}
       </h1>
 
       {showResult ? (

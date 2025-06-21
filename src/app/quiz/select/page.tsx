@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const subjects = [
-  'English Literature', 'History', 'Geography', 'Biology', 'Chemistry',
-  'Physics', 'Political Science', 'Sociology', 'Psychology'
+  'English-Literature', 'History', 'Geography', 'Biology', 'Chemistry',
+  'Physics', 'Political-Science', 'Sociology', 'Psychology'
 ];
 
 const grades = [
@@ -71,7 +71,7 @@ export default function QuizSelectPage() {
                   onClick={() => handleSubjectClick(sub)}
                   className="w-full py-3 text-left px-4 bg-slate-100 hover:bg-blue-100 rounded-lg border"
                 >
-                  {sub}
+                  {sub.replace('-', ' ')}
                 </button>
               </li>
             ))}
