@@ -6,14 +6,11 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-export async function GET(
-  req: NextRequest,
-  context: { params: { subject: string } }
-)  {
+export async function GET(req: NextRequest) {
   try {
     await connectToDB();
-
-    const subject = decodeURIComponent(context.params.subject);
+    const url = req.nextUrl;
+    const subject = url.pathname.split("/").pop();
     const subjectEntry = await SubjectWords.findOne({
       subject: new RegExp(`^${subject}$`, "i"),
     });
@@ -63,7 +60,7 @@ Make sure questions are simple and contextually useful. Only return the array, n
 
     // Attach imageURL from original word list
     const questionsWithImages = rawQuestions.map((q: any) => {
-        const options = shuffleArray([...q.options]);
+      const options = shuffleArray([...q.options]);
       const match = sample.find(
         (w) => w.word.toLowerCase() === q.word.toLowerCase()
       );
