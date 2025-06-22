@@ -16,7 +16,23 @@ export default function Header() {
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLUListElement>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const toggleDropdown = (label: string) => {
     setOpenDropdown((prev) => (prev === label ? null : label));
   };
@@ -104,7 +120,29 @@ export default function Header() {
     },
     "Quiz",
     "Dictionary A-Z",
-    "Test",
+    {
+      label: "Exam",
+      dropdown: [
+        { label: "PCAT", value: "pcat" },
+        { label: "ACT", value: "act" },
+        { label: "SAT", value: "sat" },
+        { label: "PSAT", value: "psat" },
+        { label: "MCAT", value: "mcat" },
+        { label: "CPA", value: "cpa" },
+        { label: "GED", value: "ged" },
+        { label: "TOEFL", value: "toefl" },
+        { label: "AP", value: "ap" },
+        { label: "NMSQT", value: "nmsqt" },
+        { label: "BAR", value: "bar" },
+        { label: "USMLE", value: "usmle" },
+        { label: "LSAT", value: "lsat" },
+        { label: "DAT", value: "dat" },
+        { label: "GMAT", value: "gmat" },
+        { label: "NCLEX", value: "nclex" },
+        { label: "NCLEX PN", value: "nclex-pn" },
+        { label: "GRE", value: "gre" },
+      ], // dropdown items
+    },
   ];
   const topButtons = ["Social Media", "Login / Signup", "About Us"];
 
@@ -180,26 +218,23 @@ export default function Header() {
           typeof item === "string" ? (
             <HeaderButton key={item} label={item} />
           ) : (
-            <div key={item.label} className="relative">
+            <div key={item.label} className="relative" ref={dropdownRef}>
               <div onClick={() => toggleDropdown(item.label)}>
                 <HeaderButton label={item.label} />
               </div>
 
               {openDropdown === item.label && (
-                <div
-                  className="absolute text-slate-600 bg-white shadow-md rounded mt-1 z-10"
-                  onClick={() => toggleDropdown(item.label)}
-                >
+                <div className="absolute text-slate-600 bg-white shadow-md rounded mt-1 z-10">
                   {item.dropdown.map((subItem) => (
                     <div
                       key={subItem.value}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer whitespace-nowrap"
-                      onClick={() =>
+                      onMouseDown={() =>
                         handleSelectSubject(
                           subItem.value,
                           item.label.toLowerCase() as "subject" | "grades"
                         )
                       }
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer whitespace-nowrap"
                     >
                       {subItem.label}
                     </div>
