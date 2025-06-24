@@ -36,10 +36,6 @@ export default function Header() {
   const toggleDropdown = (label: string) => {
     setOpenDropdown((prev) => (prev === label ? null : label));
   };
-  // useEffect(() => {
-  //   const savedSubject = localStorage.getItem("selectedSubject");
-  //   if (savedSubject) setSubject(savedSubject);
-  // }, []);
   const handleSearch = (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
     const trimmedQuery = query.trim();
@@ -251,6 +247,58 @@ export default function Header() {
 
 function HeaderButton({ label }: { label: string }) {
   const router = useRouter();
+  const [user, setUser] = useState<{ username: string } | null>(null);
+
+  useEffect(() => {
+    const loadUser = () => {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch (e) {
+          console.error("Invalid user in localStorage");
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    // Initial load
+    loadUser();
+
+    // Listen for custom event
+    window.addEventListener("user-updated", loadUser);
+
+    return () => window.removeEventListener("user-updated", loadUser);
+  }, []);
+
+  const isLoginButton = label === "Login / Signup";
+  const displayLabel = isLoginButton && user ? user.username : label;
+
+  const handleClick = () => {
+    if (isLoginButton && user) {
+      alert(`Welcome!, ${user.username}! ` + `New features coming soon!`);
+      localStorage.removeItem("user");
+      window.dispatchEvent(new Event("user-updated"));
+      return; // do nothing or show profile dropdown later
+    }
+
+    if (label === "Dictionary A-Z") {
+      router.push("/dictionary");
+    } else if (isLoginButton) {
+      router.push("/auth");
+    } else if (label === "Quiz") {
+      router.push("/quiz/select");
+    } else if (label === "Test") {
+      router.push("/test");
+    } else if (label === "About Us") {
+      router.push("/about");
+    } else {
+      console.log(`Clicked on ${label}`);
+    }
+  };
+
   const colorClasses: Record<string, string> = {
     "Social Media": "bg-sky-100 text-sky-800  hover:bg-sky-500",
     "Login / Signup": "bg-green-100 text-green-800  hover:bg-green-500",
@@ -262,23 +310,6 @@ function HeaderButton({ label }: { label: string }) {
     Test: "bg-purple-100 text-purple-800  hover:bg-purple-500",
   };
 
-  const handleClick = () => {
-    if (label === "Dictionary A-Z") {
-      router.push("/dictionary");
-    } else if (label === "Login / Signup") {
-      router.push("/auth");
-    } else if (label === "Quiz") {
-      router.push("/quiz/select");
-    } else if (label === "Test") {
-      router.push("/test");
-    } else if (label === "About Us") {
-      router.push("/about");
-    } else {
-      // For other labels, you can define specific routes or actions
-      console.log(`Clicked on ${label}`);
-    }
-  };
-
   return (
     <button
       onClick={handleClick}
@@ -286,7 +317,7 @@ function HeaderButton({ label }: { label: string }) {
         colorClasses[label] || "bg-gray-100 text-black hover:bg-gray-600"
       }`}
     >
-      {label}
+      {displayLabel}
     </button>
   );
 }

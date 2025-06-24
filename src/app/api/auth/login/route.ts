@@ -38,11 +38,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Login successful!",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
     });
   } catch (err: any) {
     console.error("❌ Login error:", err);
     return NextResponse.json(
-      { success: false, error: "Server error during login.", },
+      { success: false, error: "Server error during login.", data: err },
       { status: 500 }
     );
   }

@@ -8,22 +8,24 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setb] = useState("");
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setEmail("");
     setPassword("");
-    setb("");
+    setUsername("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     const payload = {
       email,
       password,
-      ...(isLogin ? {} : { username }), // Only include username on signup
+      ...(isLogin ? {} : { username }),
     };
 
     const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
@@ -36,11 +38,19 @@ export default function AuthPage() {
       });
 
       const data = await res.json();
-      alert(data.message || data.error);
-    //   router.push(`/`);
+
+      if (data.success && data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        window.dispatchEvent(new Event("user-updated"));
+        router.push("/");
+      } else {
+        alert(data.error || "Something went wrong.");
+      }
     } catch (err) {
       console.error("❌ Auth request failed:", err);
       alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,7 +67,7 @@ export default function AuthPage() {
               type="text"
               placeholder="Full Name"
               value={username}
-              onChange={(e) => setb(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg"
               required
             />
@@ -83,9 +93,20 @@ export default function AuthPage() {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+            disabled={loading}
+            className={`w-full py-2 rounded-lg transition ${
+              loading
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-indigo-600 text-white hover:bg-indigo-700"
+            }`}
           >
-            {isLogin ? "Login" : "Sign Up"}
+            {loading
+              ? isLogin
+                ? "Logging in..."
+                : "Signing up..."
+              : isLogin
+              ? "Login"
+              : "Sign Up"}
           </button>
         </form>
 
