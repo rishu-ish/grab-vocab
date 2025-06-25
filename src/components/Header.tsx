@@ -6,6 +6,8 @@ import didYouMean from "didyoumean";
 import words from "an-array-of-english-words";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
+import { FiLogOut } from "react-icons/fi";
 
 const dictionaryWords = words;
 
@@ -140,8 +142,46 @@ export default function Header() {
       ], // dropdown items
     },
   ];
-  const topButtons = ["Social Media", "Login / Signup", "About Us"];
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { data: session } = useSession();
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser || session?.user) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    const loadUser = () => {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        try {
+          setIsLoggedIn(true);
+        } catch {
+          setIsLoggedIn(false);
+        }
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    loadUser();
+    window.addEventListener("user-updated", loadUser);
+    return () => window.removeEventListener("user-updated", loadUser);
+  }, []);
+
+  const topButtons = ["Social Media"];
+  topButtons.push("Login / Signup");
+
+  if (isLoggedIn) {
+    topButtons.push("Logout");
+  } else {
+  }
+
+  topButtons.push("About Us");
   return (
     <header className="top-0 z-50 bg-slate-200 shadow-md border-b">
       {/* Top Section */}
@@ -248,6 +288,11 @@ export default function Header() {
 function HeaderButton({ label }: { label: string }) {
   const router = useRouter();
   const [user, setUser] = useState<{ username: string } | null>(null);
+  const { data: session } = useSession();
+
+  const isLoggedIn = !!user || !!session?.user;
+  const isLoginButton = label === "Login / Signup";
+  const isLogoutButton = label === "Logout";
 
   useEffect(() => {
     const loadUser = () => {
@@ -255,8 +300,7 @@ function HeaderButton({ label }: { label: string }) {
       if (stored) {
         try {
           setUser(JSON.parse(stored));
-        } catch (e) {
-          console.error("Invalid user in localStorage");
+        } catch {
           setUser(null);
         }
       } else {
@@ -264,44 +308,41 @@ function HeaderButton({ label }: { label: string }) {
       }
     };
 
-    // Initial load
     loadUser();
-
-    // Listen for custom event
     window.addEventListener("user-updated", loadUser);
-
     return () => window.removeEventListener("user-updated", loadUser);
   }, []);
 
-  const isLoginButton = label === "Login / Signup";
-  const displayLabel = isLoginButton && user ? user.username : label;
-
   const handleClick = () => {
-    if (isLoginButton && user) {
-      alert(`Welcome!, ${user.username}! ` + `New features coming soon!`);
+    if (isLogoutButton) {
       localStorage.removeItem("user");
       window.dispatchEvent(new Event("user-updated"));
-      return; // do nothing or show profile dropdown later
+      signOut({ callbackUrl: "/" }); // Also handles Google logout
+      return;
     }
 
-    if (label === "Dictionary A-Z") {
-      router.push("/dictionary");
-    } else if (isLoginButton) {
-      router.push("/auth");
-    } else if (label === "Quiz") {
-      router.push("/quiz/select");
-    } else if (label === "Test") {
-      router.push("/test");
-    } else if (label === "About Us") {
-      router.push("/about");
-    } else {
-      console.log(`Clicked on ${label}`);
+    if (isLoginButton && isLoggedIn) {
+      alert(`Welcome!, ${user?.username || session?.user?.name}!`);
+      return;
     }
+
+    if (label === "Dictionary A-Z") router.push("/dictionary");
+    else if (label === "Login / Signup") router.push("/auth");
+    else if (label === "Quiz") router.push("/quiz/select");
+    else if (label === "Test") router.push("/test");
+    else if (label === "About Us") router.push("/about");
+    else console.log(`Clicked on ${label}`);
   };
+
+  const showLabel =
+    isLoginButton && (user || session)
+      ? user?.username || session?.user?.name
+      : label;
 
   const colorClasses: Record<string, string> = {
     "Social Media": "bg-sky-100 text-sky-800  hover:bg-sky-500",
     "Login / Signup": "bg-green-100 text-green-800  hover:bg-green-500",
+    Logout: "bg-red-100 text-red-800  hover:bg-red-500",
     "About Us": "bg-yellow-100 text-yellow-800  hover:bg-yellow-500",
     Subject: "bg-indigo-100 text-indigo-800  hover:bg-indigo-500",
     Grades: "bg-pink-100 text-pink-800  hover:bg-pink-500",
@@ -313,11 +354,12 @@ function HeaderButton({ label }: { label: string }) {
   return (
     <button
       onClick={handleClick}
-      className={`text-sm px-4 py-2 rounded-full border border-muted transition ${
+      className={`text-sm px-4 py-2 rounded-full border border-muted transition flex items-center gap-2 ${
         colorClasses[label] || "bg-gray-100 text-black hover:bg-gray-600"
       }`}
     >
-      {displayLabel}
+      {isLogoutButton && <FiLogOut className="text-lg" />}
+      {showLabel}
     </button>
   );
 }

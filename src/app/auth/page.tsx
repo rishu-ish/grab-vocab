@@ -1,10 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { FaGoogle } from "react-icons/fa";
+import React from "react";
 
 export default function AuthPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +21,20 @@ export default function AuthPage() {
     setPassword("");
     setUsername("");
   };
+
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+
+    // Wait for session to load
+    if (status === "loading") return;
+
+    const isLocalUser = !!stored;
+    const isGoogleUser = !!session?.user?.email;
+
+    if (isLocalUser || isGoogleUser) {
+      router.replace("/"); // redirect to home
+    }
+  }, [session, status, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,6 +137,15 @@ export default function AuthPage() {
             {isLogin ? "Sign up here" : "Login here"}
           </button>
         </p>
+        <button
+          type="button"
+          onClick={() => signIn("google")}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 my-4 rounded-lg hover:bg-red-600 transition"
+        >
+          <FaGoogle className="text-lg" />
+          {loading ? "Signing in with Google..." : "Sign in with Google"}
+        </button>
       </div>
     </div>
   );
