@@ -1,7 +1,8 @@
-// /app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
+import { connectToDB } from "@/lib/mongodb";
+import User from "@/models/User";
 
 const handler = NextAuth({
   providers: [
@@ -15,9 +16,30 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user }) {
+      try {
+        await connectToDB();
+
+        const existingUser = await User.findOne({ email: user.email });
+
+        if (!existingUser) {
+          await User.create({
+            username: user.name,
+            email: user.email,
+            password: "", // empty since social users don’t use password
+          });
+        }
+
+        return true;
+      } catch (err) {
+        console.error("❌ Social login error:", err);
+        return false;
+      }
+    },
+
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub ?? ""; // Add user ID to session with fallback
+        session.user.id = token.sub ?? "";
       }
       return session;
     },

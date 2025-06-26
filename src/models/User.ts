@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: true },
+    password: { type: String, required: false, default: "" }, // Optional for social logins
   },
   { timestamps: true }
 );
