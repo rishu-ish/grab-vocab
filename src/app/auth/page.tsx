@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { FaGoogle } from "react-icons/fa";
+import { FaFacebook, FaGoogle } from "react-icons/fa";
 import React from "react";
 
 export default function AuthPage() {
@@ -145,6 +145,15 @@ export default function AuthPage() {
         >
           <FaGoogle className="text-lg" />
           {loading ? "Signing in with Google..." : "Sign in with Google"}
+        </button>
+        <button
+          type="button"
+          onClick={() => signIn("facebook")}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white py-2 my-4 rounded-lg hover:bg-blue-600 transition"
+        >
+          <FaFacebook className="text-lg" />
+          {loading ? "Signing in with facebook..." : "Sign in with facebook"}
         </button>
       </div>
     </div>
