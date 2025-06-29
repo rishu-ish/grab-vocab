@@ -14,7 +14,7 @@ export const metadata = {
     siteName: "GrabVocab",
     images: [
       {
-        url: "https://grab-vocab-1.vercel.app/default-og-image.png",
+        url: "https://preply.com/wp-content/uploads/2018/04/word.jpg",
         width: 1200,
         height: 630,
         alt: "GrabVocab - Learn Words",
@@ -27,7 +27,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Grab Vocab",
     description: "Learn words in a fun, visual way!",
-    images: ["https://grab-vocab-1.vercel.app/default-og-image.png"],
+    images: ["https://preply.com/wp-content/uploads/2018/04/word.jpg"],
     creator: "@YourTwitterHandle", // optional
   },
 };
