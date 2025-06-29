@@ -7,7 +7,7 @@ import words from "an-array-of-english-words";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiShare2 } from "react-icons/fi";
 
 const dictionaryWords = words;
 
@@ -329,6 +329,7 @@ function HeaderButton({ label }: { label: string }) {
     if (label === "Dictionary A-Z") router.push("/dictionary");
     else if (label === "Login / Signup") router.push("/auth");
     else if (label === "Quiz") router.push("/quiz/select");
+    else if (label === "Social Media") router.push("/share");
     else if (label === "Test") router.push("/test");
     else if (label === "About Us") router.push("/about");
     else console.log(`Clicked on ${label}`);
@@ -358,8 +359,9 @@ function HeaderButton({ label }: { label: string }) {
         colorClasses[label] || "bg-gray-100 text-black hover:bg-gray-600"
       }`}
     >
-      {isLogoutButton && <FiLogOut className="text-lg" />}
       {showLabel}
+      {isLogoutButton && <FiLogOut className="text-lg" />}
+      {label === "Social Media" && <FiShare2 className="text-lg" />}
     </button>
   );
 }
