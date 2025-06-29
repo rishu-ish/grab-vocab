@@ -3,9 +3,33 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
 
+// app/layout.tsx or app/page.tsx
 export const metadata = {
   title: "Grab Vocab",
-  description: "Vocabulary learning app",
+  description: "Learn new words easily with fun examples and images.",
+  openGraph: {
+    title: "Grab Vocab",
+    description: "Learn new words easily with fun examples and images.",
+    url: "https://grab-vocab-1.vercel.app",
+    siteName: "GrabVocab",
+    images: [
+      {
+        url: "https://grab-vocab-1.vercel.app/default-og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "GrabVocab - Learn Words",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Grab Vocab",
+    description: "Learn words in a fun, visual way!",
+    images: ["https://grab-vocab-1.vercel.app/default-og-image.png"],
+    creator: "@YourTwitterHandle", // optional
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

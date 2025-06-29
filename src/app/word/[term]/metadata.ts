@@ -1,4 +1,3 @@
-// app/word/[term]/metadata.ts
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -7,26 +6,16 @@ export async function generateMetadata({
   params: { term: string };
 }): Promise<Metadata> {
   const word = params.term;
-  let data: any = null;
 
-  try {
-    const res = await fetch(
-      `https://grab-vocab-1.vercel.app/api/define/${word}`,
-      {
-        cache: "no-store", // optional: force fresh metadata
-      }
-    );
-    data = await res.json();
-  } catch (err) {
-    console.error("Failed to fetch word metadata:", err);
-  }
+  const res = await fetch(`https://grab-vocab-1.vercel.app/api/define/${word}`);
+  const data = await res.json();
 
-  const result = data?.result;
-  const title = `Learn "${word}" - GrabVocab`;
+  const title = `Learn "${data.result?.word || word}" - GrabVocab`;
   const description =
-    result?.meaning || "Expand your vocabulary with GrabVocab.";
+    data.result?.meaning || "Expand your vocabulary with GrabVocab.";
   const image =
-    result?.imageURL || "https://grab-vocab-1.vercel.app/default-og-image.png";
+    data.result?.imageURL ||
+    "https://preply.com/wp-content/uploads/2018/04/word.jpg";
   const url = `https://grab-vocab-1.vercel.app/word/${word}`;
 
   return {
@@ -37,12 +26,18 @@ export async function generateMetadata({
       description,
       images: [{ url: image }],
       url,
+      siteName: "GrabVocab",
+      type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
       images: [image],
+    },
+    metadataBase: new URL("https://grab-vocab-1.vercel.app"),
+    alternates: {
+      canonical: url,
     },
   };
 }
