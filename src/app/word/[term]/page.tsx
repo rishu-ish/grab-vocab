@@ -1,3 +1,5 @@
+'use client';
+
 import WordDetailsDisplay from '@/components/WordDetailsDisplay';
 import { useParams } from 'next/navigation';
 
