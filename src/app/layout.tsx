@@ -7,6 +7,7 @@ import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
 export const metadata = {
   title: "Grab Vocab",
   description: "Learn new words easily with fun examples and images.",
+  manifest: "/manifest.json",
   openGraph: {
     title: "Grab Vocab",
     description: "Learn new words easily with fun examples and images.",
@@ -30,6 +31,10 @@ export const metadata = {
     images: ["https://preply.com/wp-content/uploads/2018/04/word.jpg"],
     creator: "@YourTwitterHandle", // optional
   },
+};
+
+export const viewport = {
+  themeColor: "#000000", // ✅ move here
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
