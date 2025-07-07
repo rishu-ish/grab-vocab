@@ -40,6 +40,15 @@ export const viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* iOS PWA support */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+      </head>
       <SessionProviderWrapper>
         <body className="min-h-screen w-screen bg-slate-300 text-[#1F2937] overflow-x-hidden">
           <Header />
