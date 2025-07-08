@@ -2,10 +2,22 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PaginationControls from "@/components/PaginationControls";
+import SubjectWordDetailsDisplay from "@/components/SubjectWordDisplay";
 
 interface Word {
   word: string;
-  meaning?: string;
+  partOfSpeech: string;
+  pronunciation: string;
+  wordForms: string[];
+  meaning: string;
+  exampleSentence: string;
+  synonyms: string[];
+  antonyms: string[];
+  memoryTrick: string;
+  origin: string;
+  positivePrompt?: string;
+  negativePrompt?: string;
+  imageURL?: string;
 }
 
 const colorOptions = [
@@ -18,7 +30,7 @@ const colorOptions = [
 
 const DictionaryWords = () => {
   const [words, setWords] = useState<Word[]>([]);
-  const [limit, setLimit] = useState(12);
+  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -50,21 +62,9 @@ const DictionaryWords = () => {
       ) : words.length === 0 ? (
         <p>No words found.</p>
       ) : (
-        <div className="grid mb-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div>
           {words.map((w, index) => (
-            <div
-              key={w.word}
-              className={`rounded-xl border border-gray-200 p-4 shadow hover:shadow-md transition ${
-                colorOptions[index % colorOptions.length]
-              }`}
-            >
-              <h2 className="text-xl font-bold text-black capitalize">
-                {w.word}
-              </h2>
-              <p className="text-gray-700 mt-1">
-                {w.meaning || "No meaning available."}
-              </p>
-            </div>
+            <SubjectWordDetailsDisplay data={w} key={index}/>
           ))}
         </div>
       )}

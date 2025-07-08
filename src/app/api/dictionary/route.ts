@@ -15,15 +15,7 @@ export async function GET(req: NextRequest) {
     const query = search ? { word: { $regex: new RegExp(search, "i") } } : {};
 
     const [wordDocs, total] = await Promise.all([
-      Word.find(query, {
-        word: 1,
-        meaning: 1,
-        imageURL: 1,
-        exampleSentence: 1,
-        positivePrompt: 1,
-        promptId: 1,
-        _id: 0,
-      })
+      Word.find(query)
         .skip(skip)
         .limit(limit)
         .sort({ word: 1 }),
