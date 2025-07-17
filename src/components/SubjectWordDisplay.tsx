@@ -74,7 +74,7 @@ export default function SubjectWordDetailsDisplay({ data }: { data: Worddata }) 
 
  
   return (
-    <div className={`max-w-5xl my-10 mx-10 text-gray-600 p-8 md:p-8 md:mx-auto rounded-3xl ${colorClass}`}>
+    <div className={`max-w-5xl my-2 mx-10 text-gray-600 p-8 md:p-8 md:mx-auto rounded-3xl ${colorClass}`}>
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold capitalize text-gray-600 ">
           {data.word}

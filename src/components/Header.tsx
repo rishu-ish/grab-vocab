@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import grabvocab from "../../public/grabvocab.jpeg";
+import grabvocab from "../../public/image.png";
 import didYouMean from "didyoumean";
 import words from "an-array-of-english-words";
 import { useRouter } from "next/navigation";
@@ -196,7 +196,7 @@ export default function Header() {
             alt="Logo"
             width={64}
             height={64}
-            className="mx-auto rounded-full border"
+            className="mx-auto border"
           />
           GrabVocab
         </h1>

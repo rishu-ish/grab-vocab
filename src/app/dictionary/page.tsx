@@ -62,9 +62,11 @@ const DictionaryWords = () => {
       ) : words.length === 0 ? (
         <p>No words found.</p>
       ) : (
-        <div>
+        <div className="flex flex-col overflow-y-auto snap-y snap-mandatory space-y-6 px-4 max-h-[90vh] scrollbar-hide">
           {words.map((w, index) => (
-            <SubjectWordDetailsDisplay data={w} key={index}/>
+            <div key={index} className="snap-start">
+            <SubjectWordDetailsDisplay data={w} />
+          </div>
           ))}
         </div>
       )}

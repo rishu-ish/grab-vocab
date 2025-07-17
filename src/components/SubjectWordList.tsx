@@ -69,16 +69,19 @@ export default function SubjectWordsList({ subject }: SubjectWordsListProps) {
         />
       )}
 
-      {words.length > 0 ? (
-        words.map((word) => (
-          <SubjectWordDetailsDisplay key={word.word} data={word} />
-        ))
-      ) : (
-        <p className="text-center text-red-500 mt-4">
-          No words found for this subject.
-        </p>
-      )}
-
+      <div className="flex flex-col overflow-y-auto snap-y snap-mandatory space-y-6 px-4 max-h-[90vh] scrollbar-hide">
+        {words.length > 0 ? (
+          words.map((word) => (
+            <div key={word.word} className="snap-start">
+              <SubjectWordDetailsDisplay key={word.word} data={word} />
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-red-500 mt-4">
+            No words found for this subject.
+          </p>
+        )}
+      </div>
       {words.length > 0 && (
         <PaginationControls
           page={page}
