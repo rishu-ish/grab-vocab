@@ -2,6 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
+import {
+  FaTrophy,
+  FaArrowRight,
+  FaLightbulb,
+  FaClipboardQuestion,
+} from "react-icons/fa6";
+import { MdCheckCircle, MdCancel } from "react-icons/md";
 
 interface QuizQuestion {
   word: string;
@@ -24,7 +31,6 @@ export default function ExamQuizPage() {
   const [error, setError] = useState<string | null>(null);
 
   const hasFetched = useRef(false);
-
   const current = quiz[step];
 
   useEffect(() => {
@@ -40,12 +46,10 @@ export default function ExamQuizPage() {
       if (data.success) {
         setQuiz(data.data);
       } else {
-        setError(data.error);  // ← Store API error here
-
+        setError(data.error);
       }
     } catch (err: any) {
-      setError(err.error??"Unexpected error occurred. Please try again.");
-
+      setError(err?.error ?? "Unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -74,16 +78,12 @@ export default function ExamQuizPage() {
   };
 
   const nextQuiz = () => {
-    setStep(0);
-    setScore(0);
-    setSelected(null);
-    setShowResult(false);
-    setSelectedAnswers([]);
+    resetQuiz();
     setLoading(true);
     fetchQuizForExam(exam as string);
   };
 
-  if (loading) return <p className="p-6">Loading quiz...</p>;
+  if (loading) return <p className="p-6 text-gray-600">Loading quiz...</p>;
 
   if (quiz.length === 0) {
     return (
@@ -94,24 +94,32 @@ export default function ExamQuizPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 text-black">
-      <h1 className="text-3xl font-bold mb-6 capitalize">{exam} Quiz</h1>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 capitalize flex items-center gap-2 text-[var(--accent-color)]">
+        <FaClipboardQuestion /> {exam} Quiz
+      </h1>
 
       {showResult ? (
-        <div>
-          <h2 className="text-2xl font-semibold text-center mb-6">
-            ✅ You scored {score} / {quiz.length}
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-6 text-[var(--accent-color)] flex justify-center items-center gap-2">
+            <FaTrophy /> You scored {score} / {quiz.length}
           </h2>
 
-          <div className="space-y-6">
+          <div className="space-y-6 text-left">
             {quiz.map((q, i) => (
               <div
                 key={q.word}
-                className="p-4 border rounded-xl bg-white shadow-md"
+                className="p-4 rounded-xl shadow-md"
+                style={{
+                  backgroundColor: "var(--card-bg)",
+                  border: "1px solid var(--border-color)",
+                  color: "var(--primary-text-color)",
+                }}
               >
-                <p className="font-medium text-indigo-700 mb-2">
+                <p className="font-medium text-[var(--accent-color)] mb-2">
                   Q{i + 1}: {q.question}
                 </p>
+
                 {q.imageURL && (
                   <img
                     src={q.imageURL}
@@ -119,11 +127,12 @@ export default function ExamQuizPage() {
                     className="w-full h-52 object-cover rounded mb-4"
                   />
                 )}
+
                 <ul className="list-disc pl-6 mb-2">
                   {q.options.map((opt) => (
                     <li
                       key={opt}
-                      className={`${
+                      className={`flex items-center gap-2 ${
                         opt === q.correctAnswer
                           ? "text-green-700 font-semibold"
                           : opt === selectedAnswers[i]
@@ -131,15 +140,23 @@ export default function ExamQuizPage() {
                           : "text-gray-700"
                       }`}
                     >
+                      {opt === q.correctAnswer ? (
+                        <MdCheckCircle />
+                      ) : opt === selectedAnswers[i] ? (
+                        <MdCancel />
+                      ) : (
+                        <span className="w-5" />
+                      )}
                       {opt}
                     </li>
                   ))}
                 </ul>
-                <p className="text-sm text-gray-800">
+
+                <p className="text-sm">
                   ✅ Correct: <strong>{q.correctAnswer}</strong>
                 </p>
-                <p className="text-sm italic text-gray-500 mt-1">
-                  💡 {q.explanation}
+                <p className="text-sm italic text-gray-600 flex items-center gap-2">
+                  <FaLightbulb /> {q.explanation}
                 </p>
               </div>
             ))}
@@ -148,27 +165,36 @@ export default function ExamQuizPage() {
           <div className="mt-6 space-x-4">
             <button
               onClick={resetQuiz}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="px-4 py-2 rounded-lg text-white flex items-center gap-2"
+              style={{ backgroundColor: "var(--accent-color)" }}
             >
-              Retry Same Quiz
+              Retry
             </button>
             <button
               onClick={nextQuiz}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="px-4 py-2 rounded-lg text-white flex items-center gap-2"
+              style={{ backgroundColor: "var(--accent-color)" }}
             >
-              Next Quiz
+              <FaArrowRight /> Next Quiz
             </button>
           </div>
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-xl shadow-md space-y-4">
+        <div
+          className="p-6 rounded-xl shadow-md space-y-4"
+          style={{
+            backgroundColor: "var(--card-bg)",
+            border: "1px solid var(--border-color)",
+            color: "var(--primary-text-color)",
+          }}
+        >
           <h2 className="text-xl font-semibold">
             Q{step + 1}: {current.question}
           </h2>
 
-          <div className="space-y-3 flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-6">
             {current.imageURL && (
-              <div className="md:w-1/2 min-h-full w-full">
+              <div className="md:w-1/2">
                 <img
                   src={current.imageURL}
                   alt={current.word}
@@ -176,22 +202,21 @@ export default function ExamQuizPage() {
                 />
               </div>
             )}
-            <div className="space-y-3 flex-1">
+            <div className="flex-1 space-y-3">
               {current.options.map((opt) => (
                 <button
                   key={opt}
                   onClick={() => handleAnswer(opt)}
                   disabled={!!selected}
-                  className={`w-full text-left px-4 py-3 rounded-lg border transition duration-200
-                    ${
-                      selected
-                        ? opt === current.correctAnswer
-                          ? "bg-green-100 border-green-600 text-green-800"
-                          : opt === selected
-                          ? "bg-red-100 border-red-600 text-red-800"
-                          : "bg-white"
-                        : "bg-white hover:bg-indigo-100"
-                    }`}
+                  className={`w-full text-left px-4 py-3 rounded-lg border transition duration-200 ${
+                    selected
+                      ? opt === current.correctAnswer
+                        ? "bg-green-100 border-green-600 text-green-800"
+                        : opt === selected
+                        ? "bg-red-100 border-red-600 text-red-800"
+                        : ""
+                      : " "
+                  }`}
                 >
                   {opt}
                 </button>
@@ -200,11 +225,9 @@ export default function ExamQuizPage() {
           </div>
 
           {selected && (
-            <>
-              <p className="mt-4 italic text-sm text-gray-600">
-                💡 {current.explanation}
-              </p>
-            </>
+            <p className="mt-4 italic text-sm text-gray-600 flex items-center gap-2">
+              <FaLightbulb /> {current.explanation}
+            </p>
           )}
         </div>
       )}
