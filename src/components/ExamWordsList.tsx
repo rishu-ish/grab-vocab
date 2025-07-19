@@ -45,7 +45,7 @@ export default function ExamWordsList({ exam }: ExamWordsListProps) {
           setWords([]);
           setTotalPages(1);
         } else {
-          console.error("❌ Error fetching exam words:", err);
+          console.log("❌ Error fetching exam words:", err);
         }
       } finally {
         setLoading(false);
@@ -59,15 +59,6 @@ export default function ExamWordsList({ exam }: ExamWordsListProps) {
 
   return (
     <div className="space-y-6">
-      {words.length > 0 && (
-        <PaginationControls
-          page={page}
-          totalPages={totalPages}
-          limit={limit}
-          setPage={setPage}
-          setLimit={setLimit}
-        />
-      )}
       <div className="flex flex-col overflow-y-auto snap-y snap-mandatory space-y-6 px-4 max-h-[90vh] scrollbar-hide">
         {words.length > 0 ? (
           words.map((word) => (

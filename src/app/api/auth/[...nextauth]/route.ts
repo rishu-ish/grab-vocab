@@ -32,7 +32,7 @@ const handler = NextAuth({
 
         return true;
       } catch (err) {
-        console.error("❌ Social login error:", err);
+        console.log("❌ Social login error:", err);
         return false;
       }
     },

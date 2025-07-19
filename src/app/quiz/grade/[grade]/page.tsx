@@ -39,10 +39,10 @@ export default function GradeQuizPage() {
       if (data.success) {
         setQuiz(data.data);
       } else {
-        console.error("Failed to load quiz:", data.error);
+        console.log("Failed to load quiz:", data.error);
       }
     } catch (err) {
-      console.error("Error fetching grade quiz:", err);
+      console.log("Error fetching grade quiz:", err);
     } finally {
       setLoading(false);
     }

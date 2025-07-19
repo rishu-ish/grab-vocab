@@ -45,7 +45,7 @@ export default function SubjectWordsList({ subject }: SubjectWordsListProps) {
           setWords([]);
           setTotalPages(1);
         } else {
-          console.error("❌ Error fetching subject words:", err);
+          console.log("❌ Error fetching subject words:", err);
         }
       } finally {
         setLoading(false);
@@ -59,17 +59,7 @@ export default function SubjectWordsList({ subject }: SubjectWordsListProps) {
 
   return (
     <div className="space-y-6">
-      {words.length > 0 && (
-        <PaginationControls
-          page={page}
-          totalPages={totalPages}
-          limit={limit}
-          setPage={setPage}
-          setLimit={setLimit}
-        />
-      )}
-
-      <div className="flex flex-col overflow-y-auto snap-y snap-mandatory space-y-6 px-4 max-h-[90vh] scrollbar-hide">
+      <div className="flex flex-col overflow-y-auto snap-y snap-mandatory space-y-6 max-h-[90vh] scrollbar-hide">
         {words.length > 0 ? (
           words.map((word) => (
             <div key={word.word} className="snap-start">

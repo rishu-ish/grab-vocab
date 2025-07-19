@@ -73,7 +73,7 @@ Make sure questions are simple and contextually useful. Only return the array, n
 
     return NextResponse.json({ success: true, data: questionsWithImages });
   } catch (err: any) {
-    console.error("❌ Subject Quiz API Error:", err.message);
+    console.log("❌ Subject Quiz API Error:", err.message);
     return NextResponse.json(
       { success: false, error: "Failed to generate subject quiz." },
       { status: 500 }

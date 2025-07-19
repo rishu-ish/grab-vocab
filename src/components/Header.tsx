@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import grabvocab from "../../public/image.png";
 import didYouMean from "didyoumean";
@@ -7,9 +7,28 @@ import words from "an-array-of-english-words";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import { FiLogOut, FiShare2 } from "react-icons/fi";
-
+import "@/theme/theme";
+import { navItems } from "@/data";
+import { FaShareAlt, FaUserCircle, FaBookOpen } from "react-icons/fa";
+import { MdQuiz, MdGrade } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+import { BiBookAlt } from "react-icons/bi";
+import { BsBookHalf } from "react-icons/bs";
+import { GiBookmarklet } from "react-icons/gi";
 const dictionaryWords = words;
+
+const iconMap: { [key: string]: JSX.Element } = {
+  "Social Media": <FaShareAlt className="inline mr-2" />,
+  "Login / Signup": <FaUserCircle className="inline mr-2" />,
+  Logout: <FiLogOut className="inline mr-2" />,
+  "About Us": <AiOutlineInfoCircle className="inline mr-2" />,
+  "Dictionary A-Z": <BiBookAlt className="inline mr-2" />,
+  Quiz: <MdQuiz className="inline mr-2" />,
+  Grades: <MdGrade className="inline mr-2" />,
+  Exam: <GiBookmarklet className="inline mr-2" />,
+  Subject: <BsBookHalf className="inline mr-2" />,
+};
 
 export default function Header() {
   const router = useRouter();
@@ -17,14 +36,27 @@ export default function Header() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLUListElement>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  // const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser || session?.user) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [session]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        openDropdown &&
+        dropdownRefs.current[openDropdown] &&
+        !dropdownRefs.current[openDropdown]?.contains(event.target as Node)
       ) {
         setOpenDropdown(null);
       }
@@ -34,7 +66,7 @@ export default function Header() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [openDropdown]);
   const toggleDropdown = (label: string) => {
     setOpenDropdown((prev) => (prev === label ? null : label));
   };
@@ -44,19 +76,19 @@ export default function Header() {
     if (!trimmedQuery) return;
 
     const corrected = didYouMean(trimmedQuery, dictionaryWords);
-    console.log("Corrected:", corrected);
     if (corrected && corrected !== trimmedQuery) {
       if (confirm(`Did you mean '${corrected}'?`)) {
         setQuery("");
         setSuggestions([]);
-        router.push(`/word/${corrected}`); // ✅ Go to WordDetails
+        router.push(`/word/${corrected}`);
         return;
       }
     }
     setQuery("");
     setSuggestions([]);
-    router.push(`/word/${trimmedQuery}`); // ✅ Go to WordDetails
+    router.push(`/word/${trimmedQuery}`);
   };
+
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (query.trim().length === 0) {
@@ -68,7 +100,7 @@ export default function Header() {
         const data = await res.json();
         setSuggestions(data.slice(0, 5).map((item: any) => item.word));
       } catch (err) {
-        console.error("Error fetching suggestions:", err);
+        console.log("Error fetching suggestions:", err);
       }
     };
     fetchSuggestions();
@@ -79,124 +111,41 @@ export default function Header() {
   };
 
   const handleBlur = () => {
-    // Delay to allow click on suggestions
+    // Delay clearing suggestions to allow `onMouseDown` to process
     setTimeout(() => setSuggestions([]), 100);
   };
-  const navItems = [
-    {
-      label: "Subject",
-      dropdown: [
-        { label: "English Literature", value: "english-literature" },
-        { label: "Geography", value: "geography" },
-        { label: "History", value: "history" },
-        { label: "Chemistry", value: "chemistry" },
-        { label: "Biology", value: "biology" },
-        { label: "Physics", value: "physics" },
-        { label: "Mathematics", value: "mathematics" },
-        { label: "Psychology", value: "psychology" },
-        { label: "Sociology", value: "sociology" },
-        { label: "Political Science", value: "political-science" },
-        // Add more subjects as needed
-      ], // dropdown items
-    },
-    {
-      label: "Grades",
-      dropdown: [
-        { label: "Grade 1", value: "grade-1" },
-        { label: "Grade 2", value: "grade-2" },
-        { label: "Grade 3", value: "grade-3" },
-        { label: "Grade 4", value: "grade-4" },
-        { label: "Grade 5", value: "grade-5" },
-        { label: "Grade 6", value: "grade-6" },
-        { label: "Grade 7", value: "grade-7" },
-        { label: "Grade 8", value: "grade-8" },
-        { label: "Grade 9", value: "grade-9" },
-        { label: "Grade 10", value: "grade-10" },
-        { label: "Grade 11", value: "grade-11" },
-        { label: "Grade 12", value: "grade-12" },
-      ], // dropdown items
-    },
-    "Quiz",
-    "Dictionary A-Z",
-    {
-      label: "Exam",
-      dropdown: [
-        { label: "PCAT", value: "pcat" },
-        { label: "ACT", value: "act" },
-        { label: "SAT", value: "sat" },
-        { label: "PSAT", value: "psat" },
-        { label: "MCAT", value: "mcat" },
-        { label: "CPA", value: "cpa" },
-        { label: "GED", value: "ged" },
-        { label: "TOEFL", value: "toefl" },
-        { label: "AP", value: "ap" },
-        { label: "NMSQT", value: "nmsqt" },
-        { label: "BAR", value: "bar" },
-        { label: "USMLE", value: "usmle" },
-        { label: "LSAT", value: "lsat" },
-        { label: "DAT", value: "dat" },
-        { label: "GMAT", value: "gmat" },
-        { label: "NCLEX", value: "nclex" },
-        { label: "NCLEX PN", value: "nclex-pn" },
-        { label: "GRE", value: "gre" },
-      ], // dropdown items
-    },
+
+  const topButtons = [
+    "Social Media",
+    isLoggedIn ? "Logout" : "Login / Signup",
+    "About Us",
   ];
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { data: session } = useSession();
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser || session?.user) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [session]);
-
-  useEffect(() => {
-    const loadUser = () => {
-      const stored = localStorage.getItem("user");
-      if (stored) {
-        try {
-          setIsLoggedIn(true);
-        } catch {
-          setIsLoggedIn(false);
-        }
-      } else {
-        setIsLoggedIn(false);
-      }
-    };
-
-    loadUser();
-    window.addEventListener("user-updated", loadUser);
-    return () => window.removeEventListener("user-updated", loadUser);
-  }, []);
-
-  const topButtons = ["Social Media"];
-  topButtons.push("Login / Signup");
-
-  if (isLoggedIn) {
-    topButtons.push("Logout");
-  } else {
-  }
-
-  topButtons.push("About Us");
   return (
-    <header className="top-0 z-50 bg-slate-200 shadow-md border-b">
+    <header
+      className="top-0 z-50 shadow-md border-b"
+      style={{
+        backgroundColor: "var(--background-color)",
+        borderColor: "var(--border-color)",
+      }}
+    >
       {/* Top Section */}
       <div className="flex flex-col px-4 py-3 gap-3">
         <h1
-          className="text-4xl text-gray-900 font-bold text-center text-accent cursor-pointer"
+          className="text-4xl font-bold text-center text-accent cursor-pointer hover:opacity-90 transition-opacity"
           onClick={() => router.push("/")}
-          style={{ fontFamily: "initial" }}
+          style={{
+            fontFamily: "var(--font-heading)",
+            color: "var(--accent-color)",
+          }}
         >
           <Image
             src={grabvocab}
             alt="Logo"
             width={64}
             height={64}
-            className="mx-auto border"
+            className="mx-auto"
+            style={{ borderColor: "var(--border-color)" }}
           />
           GrabVocab
         </h1>
@@ -208,160 +157,154 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <form onSubmit={handleSearch} className="px-6 pb-4">
-        <div className="relative w-full">
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Search words..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onBlur={handleBlur}
-            className="w-full px-5 py-3 rounded-full border border-muted bg-white  text-black "
-          />
-          <FaSearch
-            onClick={handleSearch}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-accent cursor-pointer"
-          />
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between px-6">
+        {/* Search Bar */}
 
-          {suggestions.length > 0 && (
-            <ul
-              ref={suggestionsRef}
-              className="absolute left-0 w-full bg-white  border border-muted mt-2 rounded-lg shadow-lg z-50 overflow-hidden"
-            >
-              {suggestions.map((word, index) => (
-                <li
-                  key={word + index}
-                  onMouseDown={() => {
-                    setQuery("");
-                    setSuggestions([]);
-                    router.push(`/word/${word}`);
-                  }}
-                  className="px-5 py-3 text-sm text-black  hover:bg-slate-100  transition-colors cursor-pointer"
-                >
-                  {word}
-                </li>
-              ))}
-            </ul>
+        {/* Navigation */}
+        <div className="flex flex-wrap gap-3 pb-4">
+          {navItems.map((item) =>
+            typeof item === "string" ? (
+              <HeaderButton key={item} label={item} />
+            ) : (
+              <div
+                key={item.label}
+                className="relative"
+                ref={(el) => {
+                  dropdownRefs.current[item.label] = el;
+                }}
+              >
+                <div onClick={() => toggleDropdown(item.label)}>
+                  <HeaderButton label={item.label} />
+                </div>
+
+                {openDropdown === item.label && (
+                  <div
+                    ref={(el) => {
+                      dropdownRefs.current[item.label] = el;
+                    }}
+                    className="absolute mt-2 w-48 rounded-xl shadow-xl z-20 border overflow-hidden"
+                    style={{
+                      backgroundColor: "var(--background-color)",
+                      color: "var(--primary-text-color)",
+                      borderColor: "var(--border-color)",
+                    }}
+                  >
+                    {item.dropdown.map((subItem) => (
+                      <div
+                        key={subItem.value}
+                        onMouseDown={() => {
+                          handleSelectSubject(
+                            subItem.value,
+                            item.label.toLowerCase() as "subject" | "grades"
+                          );
+                          setOpenDropdown(null);
+                        }}
+                        className="px-5 py-3 text-sm cursor-pointer hover:bg-accent hover:text-white transition-all"
+                        style={{
+                          color: "var(--primary-text-color)",
+                        }}
+                      >
+                        {subItem.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
           )}
         </div>
-      </form>
+        <form
+          onSubmit={handleSearch}
+          className="flex-1 relative w-full px-3 pb-4"
+        >
+          <div className="relative w-full">
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Search words..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onBlur={handleBlur}
+              className="w-full px-5 py-2 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              style={{
+                backgroundColor: "var(--background-color)",
+                color: "var(--primary-text-color)",
+                borderColor: "var(--border-color)",
+              }}
+            />
+            <FaSearch
+              onClick={handleSearch}
+              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
+              style={{ color: "var(--primary-text-color)" }}
+            />
 
-      {/* Navigation */}
-      <nav className="flex flex-wrap gap-3 px-6 pb-4">
-        {navItems.map((item) =>
-          typeof item === "string" ? (
-            <HeaderButton key={item} label={item} />
-          ) : (
-            <div key={item.label} className="relative" ref={dropdownRef}>
-              <div onClick={() => toggleDropdown(item.label)}>
-                <HeaderButton label={item.label} />
-              </div>
-
-              {openDropdown === item.label && (
-                <div className="absolute text-slate-600 bg-white shadow-md rounded mt-1 z-10">
-                  {item.dropdown.map((subItem) => (
-                    <div
-                      key={subItem.value}
-                      onMouseDown={() =>
-                        handleSelectSubject(
-                          subItem.value,
-                          item.label.toLowerCase() as "subject" | "grades"
-                        )
-                      }
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer whitespace-nowrap"
-                    >
-                      {subItem.label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )
-        )}
-      </nav>
+            {suggestions.length > 0 && (
+              <ul
+                ref={suggestionsRef}
+                className="absolute left-0 w-full mt-2 rounded-lg shadow-lg z-50 overflow-hidden"
+                style={{
+                  backgroundColor: "var(--background-color)",
+                  borderColor: "var(--border-color)",
+                }}
+              >
+                {suggestions.map((word, index) => (
+                  <li
+                    key={word + index}
+                    onMouseDown={() => {
+                      setQuery("");
+                      setSuggestions([]);
+                      router.push(`/word/${word}`);
+                    }}
+                    className="px-5 py-3 text-sm cursor-pointer hover:bg-accent/10 transition-colors"
+                    style={{
+                      color: "var(--primary-text-color)",
+                    }}
+                  >
+                    {word}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </form>
+      </div>
     </header>
   );
 }
 
 function HeaderButton({ label }: { label: string }) {
   const router = useRouter();
-  const [user, setUser] = useState<{ username: string } | null>(null);
-  const { data: session } = useSession();
-
-  const isLoggedIn = !!user || !!session?.user;
-  const isLoginButton = label === "Login / Signup";
-  const isLogoutButton = label === "Logout";
-
-  useEffect(() => {
-    const loadUser = () => {
-      const stored = localStorage.getItem("user");
-      if (stored) {
-        try {
-          setUser(JSON.parse(stored));
-        } catch {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    };
-
-    loadUser();
-    window.addEventListener("user-updated", loadUser);
-    return () => window.removeEventListener("user-updated", loadUser);
-  }, []);
 
   const handleClick = () => {
-    if (isLogoutButton) {
+    if (label === "Logout") {
       localStorage.removeItem("user");
       window.dispatchEvent(new Event("user-updated"));
-      signOut({ callbackUrl: "/" }); // Also handles Google logout
+      signOut({ callbackUrl: "/" });
       return;
     }
 
-    if (isLoginButton && isLoggedIn) {
-      alert(`Welcome!, ${user?.username || session?.user?.name}!`);
-      return;
-    }
-
-    if (label === "Dictionary A-Z") router.push("/dictionary");
-    else if (label === "Login / Signup") router.push("/auth");
+    if (label === "Login / Signup") router.push("/auth");
+    else if (label === "Dictionary A-Z") router.push("/dictionary");
     else if (label === "Quiz") router.push("/quiz/select");
     else if (label === "Social Media") router.push("/share");
-    else if (label === "Test") router.push("/test");
     else if (label === "About Us") router.push("/about");
     else console.log(`Clicked on ${label}`);
-  };
-
-  const showLabel =
-    isLoginButton && (user || session)
-      ? user?.username || session?.user?.name
-      : label;
-
-  const colorClasses: Record<string, string> = {
-    "Social Media": "bg-sky-100 text-sky-800  hover:bg-sky-500",
-    "Login / Signup": "bg-green-100 text-green-800  hover:bg-green-500",
-    Logout: "bg-red-100 text-red-800  hover:bg-red-500",
-    "About Us": "bg-yellow-100 text-yellow-800  hover:bg-yellow-500",
-    Subject: "bg-indigo-100 text-indigo-800  hover:bg-indigo-500",
-    Grades: "bg-pink-100 text-pink-800  hover:bg-pink-500",
-    Quiz: "bg-rose-100 text-rose-800  hover:bg-rose-500",
-    "Dictionary A-Z": "bg-orange-100 text-orange-800  hover:bg-orange-500",
-    Test: "bg-purple-100 text-purple-800  hover:bg-purple-500",
   };
 
   return (
     <button
       onClick={handleClick}
-      className={`text-sm px-4 py-2 rounded-full border border-muted transition flex items-center gap-2 ${
-        colorClasses[label] || "bg-gray-100 text-black hover:bg-gray-600"
-      }`}
+      className="text-sm px-4 py-2 rounded-full border transition hover:bg-accent hover:text-white"
+      style={{
+        backgroundColor: "var(--background-color)",
+        color: "var(--primary-text-color)",
+        borderColor: "var(--border-color)",
+      }}
     >
-      {showLabel}
-      {isLogoutButton && <FiLogOut className="text-lg" />}
-      {label === "Social Media" && <FiShare2 className="text-lg" />}
+      <span>
+        {iconMap[label]}
+        {label}
+      </span>
     </button>
   );
 }

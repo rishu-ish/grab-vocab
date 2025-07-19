@@ -21,6 +21,7 @@ export default function ExamQuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const hasFetched = useRef(false);
 
@@ -39,10 +40,12 @@ export default function ExamQuizPage() {
       if (data.success) {
         setQuiz(data.data);
       } else {
-        console.error("Failed to load quiz:", data.error);
+        setError(data.error);  // ← Store API error here
+
       }
-    } catch (err) {
-      console.error("Error fetching exam quiz:", err);
+    } catch (err: any) {
+      setError(err.error??"Unexpected error occurred. Please try again.");
+
     } finally {
       setLoading(false);
     }
@@ -85,7 +88,7 @@ export default function ExamQuizPage() {
   if (quiz.length === 0) {
     return (
       <div className="p-6 text-red-600 text-center">
-        ❌ Failed to load quiz. Please try again later.
+        ❌ {error || "Failed to load quiz. Please try again later."}
       </div>
     );
   }

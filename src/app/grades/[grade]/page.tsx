@@ -7,7 +7,7 @@ export default function GradePage() {
   const grade = params.grade as string;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 capitalize">
         Words for: {grade}
       </h1>

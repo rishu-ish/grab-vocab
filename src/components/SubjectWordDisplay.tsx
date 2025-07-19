@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaVolumeUp } from "react-icons/fa";
-import { BiSearch } from "react-icons/bi";
+import { FaVolumeUp, FaBrain, FaGlobeAmericas } from "react-icons/fa";
+import { BsFillBookFill, BsChatLeftQuoteFill } from "react-icons/bs";
+import { MdCategory, MdOutlineSyncAlt } from "react-icons/md";
+import { GiCancel, GiCardRandom } from "react-icons/gi";
 
 interface Worddata {
   word: string;
@@ -28,38 +30,40 @@ const colorOptions = [
   "bg-purple-100",
 ];
 
-export default function SubjectWordDetailsDisplay({ data }: { data: Worddata }) {
-  
+export default function SubjectWordDetailsDisplay({
+  data,
+}: {
+  data: Worddata;
+}) {
   const [colorClass, setColorClass] = useState("");
 
   const speak = (text: string) => {
     const synth = window.speechSynthesis;
     let voices = synth.getVoices();
-  
-    // If voices aren't loaded yet, wait and retry
+
     if (!voices.length) {
       synth.onvoiceschanged = () => speak(text);
       return;
     }
-  
-    // Prefer a female English voice
+
     const preferredVoices = voices.filter(
       (v) =>
         v.lang.startsWith("en") &&
         (v.name.toLowerCase().includes("female") ||
           v.name.toLowerCase().includes("samantha") ||
           v.name.toLowerCase().includes("google us") ||
-          v.name.toLowerCase().includes("karen") || // macOS/AU
-          v.name.toLowerCase().includes("zoe") ||    // common female voices
+          v.name.toLowerCase().includes("karen") ||
+          v.name.toLowerCase().includes("zoe") ||
           v.name.toLowerCase().includes("linda") ||
           v.name.toLowerCase().includes("ava"))
     );
-  
-    const voice = preferredVoices[0] || voices.find((v) => v.lang.startsWith("en")) || null;
-  
+
+    const voice =
+      preferredVoices[0] || voices.find((v) => v.lang.startsWith("en")) || null;
+
     const utterance = new SpeechSynthesisUtterance(text);
     if (voice) utterance.voice = voice;
-  
+
     utterance.lang = "en-US";
     synth.speak(utterance);
   };
@@ -70,13 +74,15 @@ export default function SubjectWordDetailsDisplay({ data }: { data: Worddata }) 
     setColorClass(randomColor);
   }, []);
 
-  
-
- 
   return (
-    <div className={`max-w-5xl my-2 mx-10 text-gray-600 p-8 md:p-8 md:mx-auto rounded-3xl ${colorClass}`}>
+    <div
+      className={`max-w-5xl my-2 text-gray-600 p-8 md:p-8 md:mx-auto rounded-3xl ${colorClass}`}
+      style={{
+        border: "2px solid var(--border-color)",
+      }}
+    >
       <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold capitalize text-gray-600 ">
+        <h1 className="text-4xl font-bold capitalize text-gray-600">
           {data.word}
         </h1>
         <button
@@ -89,11 +95,10 @@ export default function SubjectWordDetailsDisplay({ data }: { data: Worddata }) 
       </div>
 
       {data.pronunciation && (
-        <p className="italic mt-2 text-gray-600 ">/{data.pronunciation}/</p>
+        <p className="italic mt-2 text-gray-600">/{data.pronunciation}/</p>
       )}
 
       <div className="mt-6 flex flex-col lg:flex-row gap-8">
-        {/* Left: Image */}
         {data.imageURL && (
           <div className="w-full lg:w-1/2">
             <img
@@ -104,60 +109,75 @@ export default function SubjectWordDetailsDisplay({ data }: { data: Worddata }) 
           </div>
         )}
 
-        {/* Right: Word Info */}
         <div className="w-full lg:w-1/2 space-y-4">
           {data.meaning && (
             <div>
-              <h2 className="text-xl font-semibold">Meaning</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <BsFillBookFill /> Meaning
+              </h2>
               <p>{data.meaning}</p>
             </div>
           )}
 
           {data.partOfSpeech && (
             <div>
-              <h2 className="text-xl font-semibold">Part of Speech</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <MdCategory /> Part of Speech
+              </h2>
               <p>{data.partOfSpeech}</p>
             </div>
           )}
 
           {data.wordForms?.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold">Word Forms</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <GiCardRandom /> Word Forms
+              </h2>
               <p>{data.wordForms.join(", ")}</p>
             </div>
           )}
 
           {data.exampleSentence && (
             <div>
-              <h2 className="text-xl font-semibold">Example</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <BsChatLeftQuoteFill /> Example
+              </h2>
               <p className="italic">“{data.exampleSentence}”</p>
             </div>
           )}
 
           {data.synonyms?.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold">Synonyms</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <MdOutlineSyncAlt /> Synonyms
+              </h2>
               <p>{data.synonyms.join(", ")}</p>
             </div>
           )}
 
           {data.antonyms?.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold">Antonyms</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <GiCancel /> Antonyms
+              </h2>
               <p>{data.antonyms.join(", ")}</p>
             </div>
           )}
 
           {data.memoryTrick && (
             <div>
-              <h2 className="text-xl font-semibold">Memory Trick</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <FaBrain /> Memory Trick
+              </h2>
               <p>{data.memoryTrick}</p>
             </div>
           )}
 
           {data.origin && (
             <div>
-              <h2 className="text-xl font-semibold">Origin</h2>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <FaGlobeAmericas /> Origin
+              </h2>
               <p>{data.origin}</p>
             </div>
           )}

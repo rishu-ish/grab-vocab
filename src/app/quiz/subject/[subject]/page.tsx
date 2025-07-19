@@ -43,7 +43,7 @@ export default function SubjectQuizPage() {
         alert("Failed to load quiz.");
       }
     } catch (err) {
-      console.error("❌ Failed to fetch quiz:", err);
+      console.log("❌ Failed to fetch quiz:", err);
     } finally {
       setLoading(false);
     }

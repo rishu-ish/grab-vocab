@@ -32,7 +32,7 @@ export default function SharePage() {
         setMeaning("Word not found.");
       }
     } catch (err) {
-      console.error("Error fetching word:", err);
+      console.log("Error fetching word:", err);
       setMeaning("Failed to fetch word details.");
     } finally {
       setLoading(false);
@@ -40,29 +40,52 @@ export default function SharePage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">📤 Share Your Learning</h1>
+    <div className="max-w-2xl mx-auto p-6" style={{ color: "var(--primary-text-color)" }}>
+      <h1 className="text-2xl font-bold mb-4" style={{ color: "var(--accent-color)" }}>
+        📤 Share Your Learning
+      </h1>
 
-      <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+      <div
+        className="rounded-xl shadow-md p-4 mb-6"
+        style={{
+          backgroundColor: "var(--background-color)",
+          border: "1px solid var(--border-color)",
+        }}
+      >
         <input
           type="text"
           value={word}
           onChange={(e) => setWord(e.target.value)}
           className="w-full mb-2 p-2 border rounded"
           placeholder="Word"
+          style={{
+            backgroundColor: "var(--input-bg)",
+            color: "var(--primary-text-color)",
+            borderColor: "var(--border-color)",
+          }}
         />
         <button
           onClick={fetchWordDetails}
-          className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          className="mb-4 px-4 py-2 rounded transition hover:opacity-90"
+          style={{
+            backgroundColor: "var(--accent-color)",
+            color: "var(--button-text-color)",
+          }}
         >
           Fetch Word Details
         </button>
+
         <textarea
           value={meaning}
           onChange={(e) => setMeaning(e.target.value)}
           className="w-full mb-2 p-2 border rounded"
           placeholder="Meaning"
           rows={3}
+          style={{
+            backgroundColor: "var(--input-bg)",
+            color: "var(--primary-text-color)",
+            borderColor: "var(--border-color)",
+          }}
         />
         <input
           type="text"
@@ -70,11 +93,22 @@ export default function SharePage() {
           onChange={(e) => setImageURL(e.target.value)}
           className="w-full mb-2 p-2 border rounded"
           placeholder="Image URL (optional)"
+          style={{
+            backgroundColor: "var(--input-bg)",
+            color: "var(--primary-text-color)",
+            borderColor: "var(--border-color)",
+          }}
         />
       </div>
 
       {!loading && (
-        <div className="bg-white rounded-xl shadow-md p-4 text-center">
+        <div
+          className="rounded-xl shadow-md p-4 text-center"
+          style={{
+            backgroundColor: "var(--background-color)",
+            border: "1px solid var(--border-color)",
+          }}
+        >
           {imageURL && (
             <Image
               src={imageURL}
@@ -84,8 +118,10 @@ export default function SharePage() {
               className="mx-auto rounded mb-4"
             />
           )}
-          <h2 className="text-xl font-semibold">{word}</h2>
-          <p className="text-gray-600 mb-4">{meaning}</p>
+          <h2 className="text-xl font-semibold" style={{ color: "var(--accent-color)" }}>
+            {word}
+          </h2>
+          <p className="mb-4">{meaning}</p>
 
           <div className="flex justify-center gap-4">
             <a
@@ -94,7 +130,8 @@ export default function SharePage() {
               )}&quote=${encodeURIComponent(shareText)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800"
+              className="hover:opacity-80 transition"
+              style={{ color: "#1877F2" }}
             >
               <FaFacebook size={24} />
             </a>
@@ -105,7 +142,8 @@ export default function SharePage() {
               )}&url=${encodeURIComponent(shareUrl)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-500 hover:text-sky-700"
+              className="hover:opacity-80 transition"
+              style={{ color: "#1DA1F2" }}
             >
               <FaTwitter size={24} />
             </a>
@@ -116,14 +154,16 @@ export default function SharePage() {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-600 hover:text-green-800"
+              className="hover:opacity-80 transition"
+              style={{ color: "#25D366" }}
             >
               <FaWhatsapp size={24} />
             </a>
 
             <button
               onClick={copyToClipboard}
-              className="text-gray-600 hover:text-gray-800"
+              className="hover:opacity-80 transition"
+              style={{ color: "var(--primary-text-color)" }}
             >
               <FaLink size={24} />
             </button>
@@ -131,7 +171,7 @@ export default function SharePage() {
         </div>
       )}
 
-      {loading && <p className="text-center text-gray-500 mt-4">Loading...</p>}
+      {loading && <p className="text-center mt-4 text-gray-500">Loading...</p>}
     </div>
   );
 }

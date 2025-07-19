@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ term, result: savedWord });
   } catch (err) {
-    console.error("❌ Error:", err);
+    console.log("❌ Error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

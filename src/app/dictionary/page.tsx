@@ -54,7 +54,7 @@ const DictionaryWords = () => {
   }, [page]);
 
   return (
-    <div className="p-6 gap-6">
+    <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl font-semibold mb-4">📚 Dictionary Words (A-Z)</h1>
 
       {loading ? (
@@ -62,11 +62,11 @@ const DictionaryWords = () => {
       ) : words.length === 0 ? (
         <p>No words found.</p>
       ) : (
-        <div className="flex flex-col overflow-y-auto snap-y snap-mandatory space-y-6 px-4 max-h-[90vh] scrollbar-hide">
+        <div className="flex flex-col overflow-y-auto snap-y snap-mandatory space-y-6 max-h-[90vh] scrollbar-hide">
           {words.map((w, index) => (
             <div key={index} className="snap-start">
-            <SubjectWordDetailsDisplay data={w} />
-          </div>
+              <SubjectWordDetailsDisplay data={w} />
+            </div>
           ))}
         </div>
       )}
