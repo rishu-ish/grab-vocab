@@ -1,4 +1,6 @@
-'use client';
+"use client";
+
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface Props {
   page: number;
@@ -8,7 +10,13 @@ interface Props {
   totalPages: number;
 }
 
-export default function PaginationControls({ page, setPage, limit, setLimit, totalPages }: Props) {
+export default function PaginationControls({
+  page,
+  setPage,
+  limit,
+  setLimit,
+  totalPages,
+}: Props) {
   const handlePrev = () => setPage(Math.max(page - 1, 1));
   const handleNext = () => setPage(Math.min(page + 1, totalPages));
   const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -17,13 +25,25 @@ export default function PaginationControls({ page, setPage, limit, setLimit, tot
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
+    <div
+      className="flex flex-row md:items-center justify-between mb-4 gap-4 p-4 rounded-xl shadow-sm border"
+      style={{
+        backgroundColor: "var(--card-bg)",
+        color: "var(--primary-text-color)",
+        borderColor: "var(--border-color)",
+      }}
+    >
       <div>
-        <label className="mr-2 font-medium">Words per page:</label>
+        {/* <label className="mr-2 font-medium">Words per page:</label> */}
         <select
           value={limit}
           onChange={handleLimitChange}
-          className="border px-2 py-1 rounded bg-slate-50"
+          className="border px-2 py-1 rounded"
+          style={{
+            backgroundColor: "var(--background-color)",
+            color: "var(--primary-text-color)",
+            borderColor: "var(--border-color)",
+          }}
         >
           {[5, 10, 20, 50].map((num) => (
             <option key={num} value={num}>
@@ -32,23 +52,40 @@ export default function PaginationControls({ page, setPage, limit, setLimit, tot
           ))}
         </select>
       </div>
+
       <div className="flex items-center gap-4">
         <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
           onClick={handlePrev}
           disabled={page === 1}
+          className="flex items-center gap-2 px-3 py-1 rounded"
+          style={{
+            color: "var(--primary-text-color)",
+            opacity: page === 1 ? 0.5 : 1,
+            cursor: page === 1 ? "not-allowed" : "pointer",
+            background: "transparent",
+            border: "none",
+          }}
         >
-          Previous
+          <FaArrowLeft />
         </button>
+
         <span className="text-lg font-semibold">
-          Page {page} of {totalPages}
+          {page} of {totalPages}
         </span>
+
         <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
           onClick={handleNext}
           disabled={page === totalPages}
+          className="flex items-center gap-2 px-3 py-1 rounded"
+          style={{
+            color: "var(--primary-text-color)",
+            opacity: page === totalPages ? 0.5 : 1,
+            cursor: page === totalPages ? "not-allowed" : "pointer",
+            background: "transparent",
+            border: "none",
+          }}
         >
-          Next
+          <FaArrowRight />
         </button>
       </div>
     </div>

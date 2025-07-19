@@ -26,7 +26,7 @@ export async function GET() {
 
     return NextResponse.json(saved);
   } catch (err) {
-    console.error("Error:", err);
+    console.log("Error:", err);
     return NextResponse.json({ error: "Failed to get word of the day" }, { status: 500 });
   }
 }

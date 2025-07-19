@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (err: any) {
-    console.error("❌ Auth error:", err);
+    console.log("❌ Auth error:", err);
     return NextResponse.json(
       { success: false, error: "Server error during auth." },
       { status: 500 }

@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     console.log("📘 Grade received:", grade);
 
     if (!grade) {
-      console.error("🚫 Grade is missing from the request.");
+      console.log("🚫 Grade is missing from the request.");
       return NextResponse.json(
         { success: false, error: "Grade is required in the request." },
         { status: 400 }
@@ -87,7 +87,7 @@ Only return the array. Format must be strict JSON, no extra text.
     try {
       quiz = JSON.parse(content);
     } catch (parseErr) {
-      console.error("❌ Failed to parse OpenAI response:", parseErr);
+      console.log("❌ Failed to parse OpenAI response:", parseErr);
       throw new Error("OpenAI returned invalid JSON.");
     }
 
@@ -105,7 +105,7 @@ Only return the array. Format must be strict JSON, no extra text.
     console.log("✅ Quiz generated and enriched successfully.");
     return NextResponse.json({ success: true, data: enrichedQuiz });
   } catch (err: any) {
-    console.error("❌ Grade Quiz API Error:", err.stack || err.message);
+    console.log("❌ Grade Quiz API Error:", err.stack || err.message);
     return NextResponse.json(
       {
         success: false,

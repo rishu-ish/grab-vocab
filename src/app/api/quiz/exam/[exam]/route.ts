@@ -82,7 +82,7 @@ Rules:
     try {
       parsed = JSON.parse(raw);
     } catch (err) {
-      console.error("❌ JSON Parse Error:", raw);
+      console.log("❌ JSON Parse Error:", raw);
       throw new Error("OpenAI returned invalid JSON format.");
     }
 
@@ -99,7 +99,7 @@ Rules:
 
     return NextResponse.json({ success: true, data: enriched });
   } catch (err: any) {
-    console.error("❌ Exam Quiz API Error:", err.stack || err.message);
+    console.log("❌ Exam Quiz API Error:", err.stack || err.message);
     return NextResponse.json(
       { success: false, error: err.message || "Failed to generate quiz." },
       { status: 500 }

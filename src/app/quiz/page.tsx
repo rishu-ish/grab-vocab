@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { FaBrain, FaLightbulb, FaQuestionCircle } from "react-icons/fa";
 
 export default function QuickQuizPage() {
   const hasFetched = useRef(false);
@@ -31,7 +32,7 @@ export default function QuickQuizPage() {
         setQuiz([]);
       }
     } catch (err) {
-      console.error("Error fetching quiz:", err);
+      console.log("Error fetching quiz:", err);
       setQuiz([]);
     } finally {
       setLoading(false);
@@ -70,8 +71,13 @@ export default function QuickQuizPage() {
   if (loading) return <p className="p-6 text-gray-700">Loading quiz...</p>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 text-gray-800">
-      <h1 className="text-3xl font-bold mb-6">Quick Quiz</h1>
+    <div
+      className="max-w-2xl mx-auto p-6 rounded-xl"
+      style={{ color: "var(--primary-text-color)" }}
+    >
+      <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
+        <FaBrain /> Quick Quiz
+      </h1>
 
       {showResult ? (
         <div>
@@ -83,7 +89,11 @@ export default function QuickQuizPage() {
             {quiz.map((q, index) => (
               <div
                 key={q.word}
-                className="p-4 border rounded-lg bg-white shadow-md"
+                className="p-4 rounded-lg shadow-md border"
+                style={{
+                  backgroundColor: "var(--background-color)",
+                  borderColor: "var(--border-color)",
+                }}
               >
                 {q.imageURL && (
                   <img
@@ -105,7 +115,7 @@ export default function QuickQuizPage() {
                           ? "text-green-700 font-semibold"
                           : opt === selectedAnswers[index]
                           ? "text-red-600"
-                          : "text-gray-700"
+                          : "var(--primary-text-color)"
                       }`}
                     >
                       {opt}
@@ -128,22 +138,36 @@ export default function QuickQuizPage() {
           <div className="mt-6 space-x-4">
             <button
               onClick={resetQuiz}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="px-4 py-2 rounded-lg"
+              style={{
+                backgroundColor: "var(--accent-color)",
+                color: "white",
+              }}
             >
               Retry Same Quiz
             </button>
             <button
               onClick={nextQuiz}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="px-4 py-2 rounded-lg"
+              style={{
+                backgroundColor: "var(--accent-color)",
+                color: "white",
+              }}
             >
               Next Quiz
             </button>
           </div>
         </div>
       ) : (
-        <div className="bg-white border rounded-xl shadow-md p-4 md:p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">
-            Q{step + 1}: {current.question}
+        <div
+          className="border rounded-xl shadow-md p-4 md:p-6 mb-6"
+          style={{
+            backgroundColor: "var(--background-color)",
+            borderColor: "var(--border-color)",
+          }}
+        >
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <FaQuestionCircle /> Q{step + 1}: {current.question}
           </h2>
 
           <div className="flex flex-col md:flex-row gap-6">
@@ -165,16 +189,27 @@ export default function QuickQuizPage() {
                   key={opt}
                   onClick={() => handleAnswer(opt)}
                   disabled={!!selected}
-                  className={`w-full text-left px-4 py-3 rounded-lg border transition duration-200
-                  ${
-                    selected
-                      ? opt === current.correctAnswer
-                        ? "bg-green-100 border-green-600 text-green-800"
-                        : opt === selected
-                        ? "bg-red-100 border-red-600 text-red-800"
-                        : "bg-white"
-                      : "bg-white hover:bg-indigo-100"
-                  }`}
+                  className="w-full text-left px-4 py-3 rounded-lg border transition duration-200"
+                  style={{
+                    backgroundColor:
+                      selected && opt === current.correctAnswer
+                        ? "var(--green-bg)"
+                        : selected && opt === selected
+                        ? "var(--red-bg)"
+                        : "var(--background-color)",
+                    borderColor:
+                      selected && opt === current.correctAnswer
+                        ? "green"
+                        : selected && opt === selected
+                        ? "red"
+                        : "var(--border-color)",
+                    color:
+                      selected && opt === current.correctAnswer
+                        ? "green"
+                        : selected && opt === selected
+                        ? "red"
+                        : "var(--primary-text-color)",
+                  }}
                 >
                   {opt}
                 </button>
@@ -184,8 +219,8 @@ export default function QuickQuizPage() {
 
           {/* Explanation */}
           {selected && (
-            <p className="mt-4 italic text-sm text-gray-600">
-              Explanation: {current.explanation}
+            <p className="mt-4 italic text-sm text-gray-600 flex items-center gap-2">
+              <FaLightbulb /> Explanation: {current.explanation}
             </p>
           )}
         </div>

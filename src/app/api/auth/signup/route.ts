@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error("❌ Signup error:", error.stack || error);
+    console.log("❌ Signup error:", error.stack || error);
     return NextResponse.json(
       {
         error: "Something went wrong during signup.",

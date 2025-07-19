@@ -2,15 +2,23 @@ import React from "react";
 
 export default function AboutPage() {
   return (
-    <div className="max-w-5xl mx-auto px-6 py-16 text-gray-800">
-      <h1 className="text-5xl font-extrabold mb-10 text-indigo-700">
+    <div
+      className="max-w-5xl mx-auto px-6 py-16"
+      style={{ color: "var(--primary-text-color)" }}
+    >
+      <h1
+        className="text-5xl font-extrabold mb-10"
+        style={{ color: "var(--accent-color)" }}
+      >
         About Grab Vocab
       </h1>
 
       <p className="mb-6 text-2xl leading-relaxed font-light">
         Welcome to{" "}
-        <strong className="font-semibold text-indigo-800">Grab Vocab</strong> —
-        your dedicated space to grow your vocabulary and strengthen your
+        <strong style={{ color: "var(--accent-color)", fontWeight: 600 }}>
+          Grab Vocab
+        </strong>{" "}
+        — your dedicated space to grow your vocabulary and strengthen your
         language skills. Words are powerful, and we’re here to help you master
         them.
       </p>
@@ -19,7 +27,9 @@ export default function AboutPage() {
         At Grab Vocab, we believe learning should be smart, visual, and
         enjoyable. That’s why we blend beautifully crafted word definitions,
         real-world image prompts, example sentences, memory tricks, and even
-        quizzes to help you *remember and apply* what you learn.
+        quizzes to help you{" "}
+        <em style={{ fontStyle: "italic" }}>remember and apply</em> what you
+        learn.
       </p>
 
       <p className="mb-6 text-2xl leading-relaxed font-light">
@@ -31,7 +41,7 @@ export default function AboutPage() {
 
       <p className="text-2xl leading-relaxed font-light">
         💡 Our mission is simple:{" "}
-        <span className="font-semibold text-indigo-800">
+        <span style={{ color: "var(--accent-color)", fontWeight: 600 }}>
           Make vocabulary learning easy, effective, and exciting.
         </span>
         <br />

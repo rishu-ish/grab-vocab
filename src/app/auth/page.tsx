@@ -65,7 +65,7 @@ export default function AuthPage() {
         alert(data.error || "Something went wrong.");
       }
     } catch (err) {
-      console.error("❌ Auth request failed:", err);
+      console.log("❌ Auth request failed:", err);
       alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);

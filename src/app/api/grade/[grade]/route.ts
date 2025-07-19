@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ success: true, ...data }, { status: 200 });
   } catch (err: any) {
-    console.error("❌ API error:", err.message);
+    console.log("❌ API error:", err.message);
     return NextResponse.json(
       { success: false, error: err.message || "Server error." },
       { status: err.message.includes("not found") ? 404 : 500 }

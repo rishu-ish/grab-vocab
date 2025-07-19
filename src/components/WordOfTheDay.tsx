@@ -11,7 +11,7 @@ type WordData = {
 };
 
 const colorOptions = [
-  "bg-blue-100",
+  // "bg-accent/10", // Using Tailwind's custom theme color with transparency
   "bg-green-100",
   "bg-yellow-100",
   "bg-red-100",
@@ -60,25 +60,30 @@ export default function WordOfTheDay() {
       const response = await axios.get("/api/wordoftheday");
       setWordData(response.data);
     } catch (error) {
-      console.error("Error fetching word of the day:", error);
+      console.log("Error fetching word of the day:", error);
       setWordData(null);
     }
   };
 
-  if (!wordData) return <p className="p-4">Loading...</p>;
+  if (!wordData) return <p className="p-4 text-secondaryText">Loading...</p>;
 
   return (
-    <section className="flex flex-col md:flex-row justify-center items-stretch text-gray-800 gap-6">
+    <section className="flex flex-col md:flex-row justify-center items-stretch text-primaryText gap-6">
       <div
-        className={`flex-1 min-h-[350px] rounded-2xl shadow-lg p-8 flex flex-col justify-center ${colorClass}`}
+        className={`flex-1 min-h-[350px] rounded-2xl shadow-lg p-8 flex flex-col justify-center ${colorClass} text-black`}
+        style={{
+          border: `2px solid var(--border-color)`,
+          // backgroundColor: `var(--background-color)`,
+          // color: `var(--primary-text-color)`,
+        }}
       >
-        <h2 className="text-xl font-semibold text-lavender-600 ">
+        <h2 className="text-xl font-semibold text-accent">
           Word of the Day
         </h2>
-        <p>{formatDateString(wordData.date)}</p>
+        <p className="text-secondaryText">{formatDateString(wordData.date)}</p>
 
         <div className="flex items-center justify-between mb-4">
-          <h1 className="mt-3 text-3xl font-bold text-lavender-700  mb-2">
+          <h1 className="mt-3 text-3xl font-bold text-primaryText mb-2">
             {wordData.word}
           </h1>
           <button
@@ -90,11 +95,13 @@ export default function WordOfTheDay() {
           </button>
         </div>
 
-        <p className="mt-2 text-2xl italic text-gray-600">{wordData.meaning}</p>
+        <p className="mt-2 text-2xl italic text-secondaryText">
+          {wordData.meaning}
+        </p>
 
         <button
           onClick={() => router.push(`/word/${wordData.word}`)}
-          className="mt-6 py-2 px-4 border border-indigo-600 hover:text-white hover:bg-indigo-700 rounded-lg transition duration-200 text-sm self-start"
+          className="mt-6 py-2 px-4 border border-accent hover:text-white hover:bg-linkHover rounded-lg transition duration-200 text-sm self-start"
         >
           See Full Definition
         </button>

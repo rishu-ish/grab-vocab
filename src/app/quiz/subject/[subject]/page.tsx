@@ -2,6 +2,14 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import {
+  FaBrain,
+  FaTrophy,
+  FaLightbulb,
+  FaArrowRight,
+} from "react-icons/fa";
+import { BiRefresh } from "react-icons/bi";
+import { MdCancel, MdCheckCircle, MdImage } from "react-icons/md";
 
 type QuizQuestion = {
   word: string;
@@ -43,7 +51,7 @@ export default function SubjectQuizPage() {
         alert("Failed to load quiz.");
       }
     } catch (err) {
-      console.error("❌ Failed to fetch quiz:", err);
+      console.log("❌ Failed to fetch quiz:", err);
     } finally {
       setLoading(false);
     }
@@ -77,27 +85,32 @@ export default function SubjectQuizPage() {
     fetchQuiz();
   };
 
-  if (loading) return <p className="p-6">Loading quiz...</p>;
+  if (loading) return <p className="p-6 text-gray-700">Loading quiz...</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 text-black">
-      <h1 className="text-3xl font-bold mb-6 capitalize">
-        Subject Quiz: {subject?.toString().replace("-", " ")}
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 capitalize flex items-center gap-2 text-[var(--accent-color)]">
+        <FaBrain /> Subject Quiz: {subject?.toString().replace("-", " ")}
       </h1>
 
       {showResult ? (
         <div className="text-center">
-          <h2 className="text-2xl mb-4">
-            ✅ You scored {score} / {quiz.length}
+          <h2 className="text-2xl mb-4 flex justify-center items-center gap-2 text-[var(--accent-color)]">
+            <FaTrophy /> You scored {score} / {quiz.length}
           </h2>
 
           <div className="mt-6 space-y-6 text-left">
             {quiz.map((q, i) => (
               <div
                 key={i}
-                className="p-4 bg-white rounded-xl border shadow-sm space-y-2"
+                className="p-4 rounded-xl border shadow-sm space-y-2"
+                style={{
+                  backgroundColor: "var(--card-bg)",
+                  color: "var(--primary-text-color)",
+                  borderColor: "var(--border-color)",
+                }}
               >
-                <p className="font-medium text-indigo-700">
+                <p className="font-medium text-[var(--accent-color)]">
                   Q{i + 1}: {q.question}
                 </p>
 
@@ -109,11 +122,11 @@ export default function SubjectQuizPage() {
                   />
                 )}
 
-                <ul className="pl-4 space-y-1 text-left">
+                <ul className="pl-4 space-y-1">
                   {q.options.map((opt) => (
                     <li
                       key={opt}
-                      className={`pl-2 ${
+                      className={`pl-2 flex items-center gap-2 ${
                         opt === q.correctAnswer
                           ? "text-green-700 font-semibold"
                           : opt === selectedAnswers[i]
@@ -121,6 +134,13 @@ export default function SubjectQuizPage() {
                           : "text-gray-700"
                       }`}
                     >
+                      {opt === q.correctAnswer ? (
+                        <MdCheckCircle />
+                      ) : opt === selectedAnswers[i] ? (
+                        <MdCancel />
+                      ) : (
+                        <MdImage className="opacity-0" />
+                      )}
                       {opt}
                     </li>
                   ))}
@@ -129,8 +149,8 @@ export default function SubjectQuizPage() {
                 <p className="text-sm">
                   ✅ Correct Answer: <strong>{q.correctAnswer}</strong>
                 </p>
-                <p className="text-sm italic text-gray-600">
-                  💡 {q.explanation}
+                <p className="text-sm italic text-gray-600 flex items-center gap-2">
+                  <FaLightbulb /> {q.explanation}
                 </p>
               </div>
             ))}
@@ -139,20 +159,36 @@ export default function SubjectQuizPage() {
           <div className="mt-6 space-x-4">
             <button
               onClick={resetQuiz}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="px-4 py-2 rounded-lg flex items-center gap-2"
+              style={{
+                backgroundColor: "var(--accent-color)",
+                color: "white",
+              }}
             >
-              Retry Same Quiz
+              <BiRefresh /> Retry Same Quiz
             </button>
             <button
               onClick={nextQuiz}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="px-4 py-2 rounded-lg flex items-center gap-2"
+              style={{
+                backgroundColor: "var(--accent-color)",
+                color: "white",
+              }}
             >
-              Next Quiz
+              <FaArrowRight /> Next Quiz
             </button>
           </div>
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-xl shadow-md space-y-4">
+        <div
+          className="p-6 rounded-xl shadow-md space-y-4"
+          style={{
+            backgroundColor: "var(--card-bg)",
+            color: "var(--primary-text-color)",
+            borderColor: "var(--border-color)",
+            border: "1px solid var(--border-color)",
+          }}
+        >
           <h2 className="text-xl font-semibold">
             Q{step + 1}: {current.question}
           </h2>
@@ -161,7 +197,7 @@ export default function SubjectQuizPage() {
             {current.imageURL && (
               <div className="md:w-1/2 min-h-full w-full relative">
                 {isImageLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-10 rounded-md">
+                  <div className="absolute inset-0 flex items-center justify-center  bg-opacity-80 z-10 rounded-md">
                     <span className="text-gray-500 animate-pulse">
                       Loading image...
                     </span>
@@ -189,8 +225,8 @@ export default function SubjectQuizPage() {
                       ? "bg-green-100 border-green-600 text-green-800"
                       : opt === selected
                       ? "bg-red-100 border-red-600 text-red-800"
-                      : "bg-white"
-                    : "bg-white hover:bg-indigo-100"
+                      : ""
+                    : " hover:bg-indigo-100"
                 }`}
                 >
                   {opt}
@@ -200,8 +236,8 @@ export default function SubjectQuizPage() {
           </div>
 
           {selected && (
-            <p className="mt-4 italic text-sm text-gray-600">
-              💡 {current.explanation}
+            <p className="mt-4 italic text-sm text-gray-600 flex items-center gap-2">
+              <FaLightbulb /> {current.explanation}
             </p>
           )}
         </div>

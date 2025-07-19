@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err: any) {
-    console.error("❌ Login error:", err);
+    console.log("❌ Login error:", err);
     return NextResponse.json(
       { success: false, error: "Server error during login.", data: err },
       { status: 500 }

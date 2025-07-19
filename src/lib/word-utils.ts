@@ -32,7 +32,7 @@ export async function getWordDetails(word: string): Promise<WordDetails> {
     const data: WordDetails = JSON.parse(response.choices[0].message.content!);
     return data;
   } catch (err) {
-    console.error("Failed to parse:", err);
+    console.log("Failed to parse:", err);
     return {
       word,
       partOfSpeech: "",

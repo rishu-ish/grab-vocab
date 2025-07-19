@@ -73,7 +73,7 @@ Rules:
 
     return NextResponse.json({ success: true, data: enrichedQuiz });
   } catch (err: any) {
-    console.error("❌ Quiz API Error:", err.message);
+    console.log("❌ Quiz API Error:", err.message);
     return NextResponse.json(
       { success: false, error: "Failed to generate quiz." },
       { status: 500 }
