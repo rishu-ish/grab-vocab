@@ -179,7 +179,7 @@ export default function Header() {
           >
             <FaUser className="text-base" style={{ color: "var(--accent-color)" }} />
             <span className="px-3 py-1 rounded-full border text-[#4dabf7] bg-[#e6f4ff] border-[#b5dcff] font-semibold">
-              {user?.username || user?.name || user?.email}
+              {(user as any)?.username || (user as any)?.name || (user as any)?.email}
             </span>
           </div>
         )}
