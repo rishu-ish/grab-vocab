@@ -38,10 +38,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <SessionProviderWrapper>
         <body
           className="min-h-screen w-screen overflow-x-hidden"
-          style={{ backgroundColor: "var(--background-color)" }}
+          style={{ background: "var(--background-gradient)" }}
         >
           <Header />
-          <button
+          {/* <button
             onClick={toggleTheme}
             className="absolute top-4 right-4 p-3 rounded-full border shadow transition-all duration-300 ease-in-out"
             style={{
@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             aria-label="Toggle Theme"
           >
             {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
-          </button>
+          </button> */}
           <main className=" w-screen main-container">{children}</main>
         </body>
       </SessionProviderWrapper>

@@ -25,14 +25,13 @@ export default function AuthPage() {
   useEffect(() => {
     const stored = localStorage.getItem("user");
 
-    // Wait for session to load
     if (status === "loading") return;
 
     const isLocalUser = !!stored;
     const isGoogleUser = !!session?.user?.email;
 
     if (isLocalUser || isGoogleUser) {
-      router.replace("/"); // redirect to home
+      router.replace("/");
     }
   }, [session, status, router]);
 
@@ -59,7 +58,7 @@ export default function AuthPage() {
 
       if (data.success && data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
-        window.dispatchEvent(new Event("user-updated"));
+        window.dispatchEvent(new CustomEvent("user-updated", { detail: data.user }));
         router.push("/");
       } else {
         alert(data.error || "Something went wrong.");
@@ -73,8 +72,18 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex items-center justify-center p-10">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-md">
+    <div className="flex items-center justify-center p-10" style={{
+      backgroundColor: "var(--background-color)",
+      color: "var(--primary-text-color)",
+    }}>
+      <div
+        className="w-full max-w-md p-8 rounded-xl shadow-md"
+        style={{
+          backgroundColor: "var(--card-bg)",
+          color: "var(--primary-text-color)",
+          border: "1px solid var(--border-color)",
+        }}
+      >
         <h1 className="text-2xl font-bold mb-6 text-center">
           {isLogin ? "Login to GrabVocab" : "Create an Account"}
         </h1>
@@ -87,6 +96,11 @@ export default function AuthPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg"
+              style={{
+                backgroundColor: "var(--background-color)",
+                color: "var(--primary-text-color)",
+                borderColor: "var(--border-color)",
+              }}
               required
             />
           )}
@@ -97,6 +111,11 @@ export default function AuthPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg"
+            style={{
+              backgroundColor: "var(--background-color)",
+              color: "var(--primary-text-color)",
+              borderColor: "var(--border-color)",
+            }}
             required
           />
 
@@ -106,17 +125,24 @@ export default function AuthPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg"
+            style={{
+              backgroundColor: "var(--background-color)",
+              color: "var(--primary-text-color)",
+              borderColor: "var(--border-color)",
+            }}
             required
           />
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 rounded-lg transition ${
-              loading
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-indigo-600 text-white hover:bg-indigo-700"
-            }`}
+            className="w-full py-2 rounded-lg transition"
+            style={{
+              backgroundColor: loading ? "gray" : "var(--accent-color)",
+              color: "white",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.7 : 1,
+            }}
           >
             {loading
               ? isLogin
@@ -128,32 +154,47 @@ export default function AuthPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-center text-gray-600">
+        <p className="mt-4 text-sm text-center" style={{ color: "var(--muted-text-color)" }}>
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
             onClick={toggleForm}
-            className="text-indigo-600 hover:underline"
+            className="font-semibold"
+            style={{ color: "var(--accent-color)" }}
           >
             {isLogin ? "Sign up here" : "Login here"}
           </button>
         </p>
+
         <button
           type="button"
           onClick={() => signIn("google")}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 my-4 rounded-lg hover:bg-red-600 transition"
+          className="w-full flex items-center justify-center gap-2 py-2 my-4 rounded-lg transition"
+          style={{
+            backgroundColor: "#DB4437",
+            color: "white",
+            opacity: loading ? 0.7 : 1,
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
         >
           <FaGoogle className="text-lg" />
           {loading ? "Signing in with Google..." : "Sign in with Google"}
         </button>
+
         <button
           type="button"
           onClick={() => signIn("facebook")}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white py-2 my-4 rounded-lg hover:bg-blue-600 transition"
+          className="w-full flex items-center justify-center gap-2 py-2 my-2 rounded-lg transition"
+          style={{
+            backgroundColor: "#1877F2",
+            color: "white",
+            opacity: loading ? 0.7 : 1,
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
         >
           <FaFacebook className="text-lg" />
-          {loading ? "Signing in with facebook..." : "Sign in with facebook"}
+          {loading ? "Signing in with Facebook..." : "Sign in with Facebook"}
         </button>
       </div>
     </div>

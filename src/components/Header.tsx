@@ -1,6 +1,6 @@
 "use client";
 import { JSX, useEffect, useRef, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaUser } from "react-icons/fa";
 import grabvocab from "../../public/image.png";
 import didYouMean from "didyoumean";
 import words from "an-array-of-english-words";
@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import "@/theme/theme";
-import { navItems } from "@/data";
-import { FaShareAlt, FaUserCircle, FaBookOpen } from "react-icons/fa";
+import { buttonColorMap, navItems } from "@/data";
+import { FaShareAlt, FaUserCircle } from "react-icons/fa";
 import { MdQuiz, MdGrade } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -37,17 +37,46 @@ export default function Header() {
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLUListElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  // const dropdownRef = useRef<HTMLDivElement>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const { data: session } = useSession();
 
   useEffect(() => {
+    const handleUserUpdate = (e: any) => {
+      const updatedUser = e.detail;
+      setUser(updatedUser);
+      setIsLoggedIn(true);
+    };
+
+    window.addEventListener("user-updated", handleUserUpdate);
+
+    return () => {
+      window.removeEventListener("user-updated", handleUserUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser || session?.user) {
+
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        console.log(parsedUser);
+        setUser(parsedUser as any);
+        setIsLoggedIn(true);
+      } catch (err) {
+        console.error("Error parsing user:", err);
+        setUser(undefined);
+        setIsLoggedIn(false);
+      }
+    } else if (session?.user) {
+      setUser(session.user as any);
       setIsLoggedIn(true);
     } else {
+      setUser(undefined);
       setIsLoggedIn(false);
     }
   }, [session]);
@@ -117,18 +146,12 @@ export default function Header() {
 
   const topButtons = [
     "Social Media",
-    isLoggedIn ? "Logout" : "Login / Signup",
     "About Us",
+    isLoggedIn ? "Logout" : "Login / Signup",
   ];
 
   return (
-    <header
-      className="top-0 z-50 shadow-md border-b"
-      style={{
-        backgroundColor: "var(--background-color)",
-        borderColor: "var(--border-color)",
-      }}
-    >
+    <header className="top-0 z-50 shadow-md border-b bg-[#FFF5EC] border-[#F2E0D0]">
       {/* Top Section */}
       <div className="flex flex-col px-4 py-3 gap-3">
         <h1
@@ -149,7 +172,17 @@ export default function Header() {
           />
           GrabVocab
         </h1>
-
+        {isLoggedIn && (
+          <div
+            className="flex items-center justify-end gap-2 text-sm text-right px-3 pb-1 font-medium"
+            style={{ color: "var(--accent-color)" }}
+          >
+            <FaUser className="text-base" style={{ color: "var(--accent-color)" }} />
+            <span className="px-3 py-1 rounded-full border text-[#4dabf7] bg-[#e6f4ff] border-[#b5dcff] font-semibold">
+              {user?.username || user?.name || user?.email}
+            </span>
+          </div>
+        )}
         <div className="flex justify-end flex-wrap gap-3 px-3">
           {topButtons.map((label) => (
             <HeaderButton key={label} label={label} />
@@ -162,6 +195,15 @@ export default function Header() {
 
         {/* Navigation */}
         <div className="flex flex-wrap gap-3 pb-4">
+          <div className="md:hidden flex justify-end px-4">
+            <button
+              onClick={() => setDrawerOpen(true)}
+              className="text-2xl text-accent"
+              aria-label="Open menu"
+            >
+              ☰
+            </button>
+          </div>
           {navItems.map((item) =>
             typeof item === "string" ? (
               <HeaderButton key={item} label={item} />
@@ -182,32 +224,39 @@ export default function Header() {
                     ref={(el) => {
                       dropdownRefs.current[item.label] = el;
                     }}
-                    className="absolute mt-2 w-48 rounded-xl shadow-xl z-20 border overflow-hidden"
-                    style={{
-                      backgroundColor: "var(--background-color)",
-                      color: "var(--primary-text-color)",
-                      borderColor: "var(--border-color)",
-                    }}
+                    className="absolute mt-2 w-48 rounded-xl shadow-xl z-20 border border-[#FFDDD6] bg-white text-[#3a3a3a]"
                   >
-                    {item.dropdown.map((subItem) => (
-                      <div
-                        key={subItem.value}
-                        onMouseDown={() => {
-                          handleSelectSubject(
-                            subItem.value,
-                            item.label.toLowerCase() as "subject" | "grades"
-                          );
-                          setOpenDropdown(null);
+                    <div >
+
+                      {/* <div
+                        ref={(el) => {
+                          dropdownRefs.current[item.label] = el;
                         }}
-                        className="px-5 py-3 text-sm cursor-pointer hover:bg-accent hover:text-white transition-all"
+                        className="absolute mt-2 w-48 rounded-xl shadow-xl z-20 border overflow-hidden"
                         style={{
+                          backgroundColor: "var(--background-color)",
                           color: "var(--primary-text-color)",
+                          borderColor: "var(--border-color)",
                         }}
-                      >
-                        {subItem.label}
-                      </div>
-                    ))}
+                      > */}
+                      {item.dropdown.map((subItem) => (
+                        <div
+                          key={subItem.value}
+                          onMouseDown={() => {
+                            handleSelectSubject(
+                              subItem.value,
+                              item.label.toLowerCase() as "subject" | "grades"
+                            );
+                            setOpenDropdown(null);
+                          }}
+                          className="px-5 py-3 hover:bg-[#ffbaba] hover:text-white transition-colors"
+                        >
+                          {subItem.label}
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                  // </div>
                 )}
               </div>
             )
@@ -225,18 +274,19 @@ export default function Header() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onBlur={handleBlur}
-              className="w-full px-5 py-2 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              // className="w-full px-5 py-2 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-accent"
               style={{
                 backgroundColor: "var(--background-color)",
                 color: "var(--primary-text-color)",
                 borderColor: "var(--border-color)",
               }}
+              className="w-full px-5 py-2 rounded-full border border-[#ffd6d6] shadow-sm focus:ring-2 focus:ring-[#ff6b6b] bg-white text-[#333]"
+
             />
             <FaSearch
               onClick={handleSearch}
-              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
               style={{ color: "var(--primary-text-color)" }}
-            />
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#ff6b6b]" />
 
             {suggestions.length > 0 && (
               <ul
@@ -268,6 +318,53 @@ export default function Header() {
           </div>
         </form>
       </div>
+      {drawerOpen && (
+        <div onClick={() => setDrawerOpen(false)}
+          className="absolute top-0 left-0 h-full w-64 bg-[#FFF5EC] shadow-lg p-6 border-r border-[#f2d4c0]">
+          <div
+            className="absolute top-0 left-0 h-full w-64 bg-white dark:bg-neutral-900 shadow-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "var(--background-color)",
+              color: "var(--primary-text-color)",
+              borderRight: "1px solid var(--border-color)",
+            }}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Menu</h2>
+              <button onClick={() => setDrawerOpen(false)} className="text-xl">✕</button>
+            </div>
+
+            <div className="space-y-4">
+              {navItems.map((item) =>
+                typeof item === "string" ? (
+                  <HeaderButton key={item} label={item} />
+                ) : (
+                  item.dropdown.map((subItem) => (
+                    <button
+                      key={subItem.value}
+                      onClick={() => {
+                        setDrawerOpen(false);
+                        router.push(`/${item.label.toLowerCase()}/${subItem.value}`);
+                      }}
+                      className="block w-full text-left px-4 py-2 rounded hover:bg-accent hover:text-white transition"
+                      style={{
+                        backgroundColor: "var(--background-color)",
+                        color: "var(--primary-text-color)",
+                      }}
+                    >
+                      {subItem.label}
+                    </button>
+                  ))
+                )
+              )}
+              {topButtons.map((label) => (
+                <HeaderButton key={label} label={label} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
@@ -291,17 +388,16 @@ function HeaderButton({ label }: { label: string }) {
     else console.log(`Clicked on ${label}`);
   };
 
+  const styles =
+    buttonColorMap[label as keyof typeof buttonColorMap] ||
+    "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200";
+
   return (
     <button
       onClick={handleClick}
-      className="text-sm px-4 py-2 rounded-full border transition hover:bg-accent hover:text-white"
-      style={{
-        backgroundColor: "var(--background-color)",
-        color: "var(--primary-text-color)",
-        borderColor: "var(--border-color)",
-      }}
+      className={`text-sm px-4 py-2 rounded-full border transition font-medium ${styles}`}
     >
-      <span>
+      <span className="flex items-center gap-1">
         {iconMap[label]}
         {label}
       </span>
