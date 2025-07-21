@@ -10,8 +10,7 @@
   --font-body: 'Inter', 'Helvetica', 'Open Sans', sans-serif;
 
   --background-gradient: linear-gradient(135deg, #befcb5, #ccc1fb);
-  --header-gradient: linear-gradient(120deg, #b4e0ff, #fddde6);
-  /* NEW */
+  --header-gradient: linear-gradient(120deg, #b4e0ff, #fddde6); /* NEW */
 }
 
 [data-theme="light"],
@@ -20,16 +19,15 @@
 }
 
 [data-theme="dark"] {
-  --background-color: rgba(255, 255, 255, 0);
+  --background-color: #111827;
   --primary-text-color: #FAFAFA;
   --secondary-text-color: #A3A3A3;
   --accent-color: #3B82F6;
   --border-color: #8c8989;
   --link-hover-color: #2563EB;
 
-  --background-gradient: linear-gradient(135deg, #8a97f1, #c4b5fd);
-  --header-gradient: linear-gradient(120deg, #485563, #29323c);
-  /* DARK HEADER */
+  --background-gradient: linear-gradient(135deg, #111827, #111827);
+  --header-gradient: linear-gradient(120deg, #111827, #111827); /* DARK HEADER */
 }
 
 .main-container {

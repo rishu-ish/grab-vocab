@@ -7,7 +7,6 @@ import words from "an-array-of-english-words";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import "@/theme/theme";
 import { buttonColorMap, navItems } from "@/data";
 import { FaShareAlt, FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
 import { MdQuiz, MdGrade } from "react-icons/md";
@@ -17,6 +16,8 @@ import { BiBookAlt } from "react-icons/bi";
 import { BsBookHalf } from "react-icons/bs";
 import { GiBookmarklet } from "react-icons/gi";
 import { FaMoon, FaSun } from "react-icons/fa";
+import "@/theme/theme.css"; // or .scss/.module.css
+
 const dictionaryWords = words;
 
 const iconMap: { [key: string]: JSX.Element } = {
@@ -206,7 +207,7 @@ export default function Header() {
   if (isMobile) {
     console.log('Rendering mobile header');
     return (
-      <header className="top-0 z-50 shadow-md border-b bg-[#ffffff] border-[#F2E0D0]"
+      <header className="top-0 z-50 shadow-md border-b border-[#F2E0D0]"
         style={{ background: "var(--header-gradient)" }}>
         {/* Mobile Header */}
         <div className="flex items-center justify-between px-4 py-3 relative">
@@ -231,11 +232,12 @@ export default function Header() {
           {/* Theme toggle button */}
           <button
             onClick={toggleTheme}
-            className="absolute right-12 top-1/2 -translate-y-1/2 p-2 rounded-full border shadow transition-all duration-300 ease-in-out bg-white"
+            className="absolute right-12 top-1/2 -translate-y-1/2 p-2 rounded-full shadow transition-all duration-300 ease-in-out bg-white"
             style={{
-              color: "var(--primary-text-color)",
+              color: "var(--accent-color)",
               borderColor: "var(--border-color)",
               transform: "scale(1)",
+              backgroundColor: "var(--background-color)",
             }}
             onMouseDown={e => (e.currentTarget.style.transform = "scale(0.9)")}
             onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
@@ -248,8 +250,10 @@ export default function Header() {
               console.log('Drawer button clicked');
               setDrawerOpen(true);
             }}
-            className="text-2xl text-accent p-2 hover:bg-accent/10 rounded-full transition-colors"
+            // className="text-2xl text-accent p-2 hover:bg-accent/10 rounded-full transition-colors"
             aria-label="Open menu"
+            className="text-2xl p-2 hover:bg-accent/10 rounded-full"
+                  style={{ color: 'var(--accent-color)' }}
           >
             <FaBars />
           </button>
@@ -312,18 +316,25 @@ export default function Header() {
         {/* Mobile Drawer */}
         {drawerOpen && (
           <div
-            className="fixed inset-0 z-50 bg-black bg-opacity-50"
+            className="fixed inset-0 z-50 bg-opacity-50"
             onClick={() => setDrawerOpen(false)}
           >
             <div
-              className="absolute top-0 right-0 h-full w-80 bg-[#FFF5EC] shadow-lg p-6 border-l border-[#F2E0D0] overflow-y-auto"
+              className="absolute top-0 right-0 h-full w-80 shadow-lg p-6 overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
+              style={{
+                background: 'var(--header-gradient)',
+                borderLeft: '1px solid var(--border-color)',
+              }}
             >
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-accent">Menu</h2>
+                <h2 className="text-xl font-bold" style={{ color: 'var(--accent-color)' }}>
+                  Menu
+                </h2>
                 <button
                   onClick={() => setDrawerOpen(false)}
-                  className="text-2xl text-accent p-2 hover:bg-accent/10 rounded-full"
+                  className="text-2xl p-2 hover:bg-accent/10 rounded-full"
+                  style={{ color: 'var(--accent-color)' }}
                 >
                   <FaTimes />
                 </button>
@@ -331,10 +342,24 @@ export default function Header() {
 
               {/* User Info */}
               {isLoggedIn && (
-                <div className="mb-6 p-4 bg-white rounded-lg border border-[#F2E0D0]">
-                  <div className="flex items-center gap-2 text-sm font-medium text-accent">
-                    <FaUser className="text-base" />
-                    <span className="px-3 py-1 rounded-full border text-[#4dabf7] bg-[#e6f4ff] border-[#b5dcff] font-semibold">
+                <div
+                  className="mb-6 p-4 rounded-lg border"
+                  style={{
+                    background: 'var(--background-color)',
+                    borderColor: 'var(--border-color)',
+                    color: 'var(--accent-color)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <FaUser className="text-base" style={{ color: 'var(--accent-color)' }} />
+                    <span
+                      className="px-3 py-1 rounded-full border font-semibold"
+                      style={{
+                        background: 'var(--background-gradient)',
+                        color: 'var(--primary-text-color)',
+                        borderColor: 'var(--border-color)',
+                      }}
+                    >
                       {(user as any)?.username || (user as any)?.name || (user as any)?.email}
                     </span>
                   </div>
@@ -355,7 +380,7 @@ export default function Header() {
                     <MobileDrawerButton key={item} label={item} onClose={() => setDrawerOpen(false)} />
                   ) : (
                     <div key={item.label} className="space-y-2">
-                      <div className="font-semibold text-accent text-lg flex items-center gap-2">
+                      <div className="font-semibold text-lg flex items-center gap-2" style={{ color: 'var(--accent-color)' }}>
                         {iconMap[item.label]}
                         {item.label}
                       </div>
@@ -394,7 +419,8 @@ export default function Header() {
   console.log('Rendering desktop header');
   return (
     <header className="top-0 z-50 shadow-md border-b bg-[#FFF5EC] border-[#F2E0D0]"
->
+      style={{ background: "var(--header-gradient)" }}
+    >
       {/* Top Section */}
       <div className="flex flex-col px-4 py-3 gap-3 relative">
         <h1
@@ -423,6 +449,7 @@ export default function Header() {
             color: "var(--primary-text-color)",
             borderColor: "var(--border-color)",
             transform: "scale(1)",
+            backgroundColor: "var(--background-color)",
           }}
           onMouseDown={e => (e.currentTarget.style.transform = "scale(0.9)")}
           onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
