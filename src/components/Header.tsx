@@ -253,7 +253,7 @@ export default function Header() {
             // className="text-2xl text-accent p-2 hover:bg-accent/10 rounded-full transition-colors"
             aria-label="Open menu"
             className="text-2xl p-2 hover:bg-accent/10 rounded-full"
-                  style={{ color: 'var(--accent-color)' }}
+            style={{ color: 'var(--accent-color)' }}
           >
             <FaBars />
           </button>
@@ -422,29 +422,20 @@ export default function Header() {
       style={{ background: "var(--header-gradient)" }}
     >
       {/* Top Section */}
-      <div className="flex flex-col px-4 py-3 gap-3 relative">
-        <h1
-          className="text-4xl font-bold text-center text-accent cursor-pointer hover:opacity-90 transition-opacity"
+      <div className="max-w-screen mx-auto flex flex-col px-4 py-3 gap-2 relative">
+        <div
+          className="flex items-center justify-center gap-2 cursor-pointer"
           onClick={() => router.push("/")}
-          style={{
-            fontFamily: "var(--font-heading)",
-            color: "var(--accent-color)",
-          }}
         >
-          <Image
-            src={grabvocab}
-            alt="Logo"
-            width={64}
-            height={64}
-            className="mx-auto"
-            style={{ borderColor: "var(--border-color)" }}
-          />
-          GrabVocab
-        </h1>
+          <Image src={grabvocab} alt="Logo" width={40} height={40} className="rounded" />
+          <h1 className="text-3xl font-bold" style={{ fontFamily: "var(--font-heading)", color: "var(--accent-color)" }}>
+            GrabVocab
+          </h1>
+        </div>
         {/* Theme toggle button */}
         <button
           onClick={toggleTheme}
-          className="absolute right-8 top-6 p-3 rounded-full border shadow transition-all duration-300 ease-in-out bg-white"
+          className="absolute right-8 top-2 p-3 rounded-full border shadow transition-all duration-300 ease-in-out bg-white"
           style={{
             color: "var(--primary-text-color)",
             borderColor: "var(--border-color)",
@@ -468,16 +459,16 @@ export default function Header() {
             </span>
           </div>
         )}
-        <div className="flex justify-end flex-wrap gap-3 px-3">
+        <div className="flex justify-end flex-wrap gap-2 px-3">
           {topButtons.map((label) => (
             <HeaderButton key={label} label={label} />
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between px-6">
+      <div className="max-w-screen mx-auto flex flex-col md:flex-row md:items-center md:justify-between px-4">
         {/* Navigation */}
-        <div className="flex flex-wrap gap-3 pb-4">
+        <div className="flex flex-wrap gap-2 pb-4">
           {navItems.map((item) =>
             typeof item === "string" ? (
               <HeaderButton key={item} label={item} />
@@ -608,6 +599,11 @@ function HeaderButton({ label }: { label: string }) {
     <button
       onClick={handleClick}
       className={`text-sm px-4 py-2 rounded-full border transition font-medium ${styles}`}
+      style={{
+        backgroundColor: "var(--background-color)",
+        color: "var(--primary-text-color)",
+        borderColor: "var(--border-color)",
+      }}
     >
       <span className="flex items-center gap-1">
         {iconMap[label]}
@@ -663,10 +659,15 @@ function MobileDrawerButton({ label, onClose }: { label: string; onClose: () => 
     <button
       onClick={handleClick}
       className={`w-full text-left px-4 py-3 rounded-lg border transition font-medium ${styles}`}
+      style={{
+        backgroundColor: "var(--background-color)",
+        color: "var(--primary-text-color)",
+        borderColor: "var(--border-color)",
+      }}
     >
       <span className="flex items-center gap-2">
         {iconMap[label]}
-        {label}
+        {/* {label} */}
       </span>
     </button>
   );

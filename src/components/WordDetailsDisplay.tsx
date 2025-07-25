@@ -31,11 +31,12 @@ interface WordResult {
 }
 
 const colorOptions = [
-  "bg-blue-100",
-  "bg-green-100",
-  "bg-yellow-100",
-  "bg-red-100",
-  "bg-purple-100",
+  "bg-transparent",
+  // "bg-blue-100",
+  // "bg-green-100",
+  // "bg-yellow-100",
+  // "bg-red-100",
+  // "bg-purple-100",
 ];
 
 export default function WordDetailsDisplay({ term }: { term: string }) {
@@ -122,24 +123,22 @@ export default function WordDetailsDisplay({ term }: { term: string }) {
   }
 
   return (
-    <div
-      className={`max-w-5xl my-10 p-8 rounded-3xl mx-auto shadow-md text-slate-700 ${colorClass}`}
-      style={{
-        border: "2px solid var(--border-color)",
-      }}
+    <div className={`max-w-6xl my-4 p-3 md:p-4 rounded-xl mx-auto shadow-sm ${colorClass}`} style={{
+      border: "1px solid var(--border-color)",
+    }}
     >
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold capitalize">{result.word}</h1>
         <button onClick={() => speak(result.word)} aria-label="Listen">
           <FaVolumeHigh
             size={24}
-            // style={{ color: "var(--primary-text-color)" }}
+          // style={{ color: "var(--primary-text-color)" }}
           />
         </button>
       </div>
 
       {result.pronunciation && (
-        <p className="italic mt-2">/{result.pronunciation}/</p>
+        <p className="italic mt-2 text-2xl">/{result.pronunciation}/</p>
       )}
 
       <div className="mt-6 flex flex-col lg:flex-row gap-8">

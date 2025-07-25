@@ -1,16 +1,22 @@
 :root {
-  --background-color: rgba(255, 255, 255, 0);
+  --background-gradient: linear-gradient(135deg, #f5f5f5, #f5f5f5);
+  --background-color: rgba(0,0,0,0);
+  --accent-color: #000000;
+  --primary-color: #000000;
+  --secondary-color: #000000;
+
+
+  
   --primary-text-color: #1a1a1a;
   --secondary-text-color: #555555;
-  --accent-color: #3B82F6;
   --border-color: #cbcbce;
   --link-hover-color: #2563EB;
 
-  --font-heading: 'Georgia', 'Merriweather', 'Playfair Display', serif;
-  --font-body: 'Inter', 'Helvetica', 'Open Sans', sans-serif;
+  --font-heading:  'Courier New', Courier, monospace;
+  --font-body:  'Courier New', Courier, monospace;
 
-  --background-gradient: linear-gradient(135deg, #befcb5, #ccc1fb);
-  --header-gradient: linear-gradient(120deg, #b4e0ff, #fddde6); /* NEW */
+  --header-gradient: linear-gradient(120deg, #f5f5f5, #f5f5f5);
+  /* NEW */
 }
 
 [data-theme="light"],
@@ -19,15 +25,21 @@
 }
 
 [data-theme="dark"] {
-  --background-color: #111827;
+  --background-gradient: linear-gradient(135deg, #1f1f1f, #1f1f1f);
+  --background-color: rgba(0,0,0,0);
+  --accent-color: #ffffff;
+  --primary-color: #ffffff;
+  --secondary-color: #ffffff;
+
+
+
   --primary-text-color: #FAFAFA;
   --secondary-text-color: #A3A3A3;
-  --accent-color: #3B82F6;
   --border-color: #8c8989;
   --link-hover-color: #2563EB;
 
-  --background-gradient: linear-gradient(135deg, #111827, #111827);
-  --header-gradient: linear-gradient(120deg, #111827, #111827); /* DARK HEADER */
+  --header-gradient: linear-gradient(120deg, #1f1f1f, #1f1f1f);
+  /* DARK HEADER */
 }
 
 .main-container {

@@ -23,11 +23,12 @@ interface Worddata {
 }
 
 const colorOptions = [
-  "bg-blue-100",
-  "bg-green-100",
-  "bg-yellow-100",
-  "bg-red-100",
-  "bg-purple-100",
+  "bg-transparent",
+  // "bg-blue-100",
+  // "bg-green-100",
+  // "bg-yellow-100",
+  // "bg-red-100",
+  // "bg-purple-100",
 ];
 
 export default function SubjectWordDetailsDisplay({
@@ -76,18 +77,17 @@ export default function SubjectWordDetailsDisplay({
 
   return (
     <div
-      className={`max-w-5xl my-2 text-gray-600 p-8 md:p-8 md:mx-auto rounded-3xl ${colorClass}`}
-      style={{
+      className={`max-w-7xl my-2 p-4 md:p-6 mx-auto rounded-2xl ${colorClass}`} style={{
         border: "2px solid var(--border-color)",
       }}
     >
       <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold capitalize text-gray-600">
+        <h1 className="text-4xl font-bold capitalize">
           {data.word}
         </h1>
         <button
           onClick={() => speak(data.word)}
-          className="text-gray-600"
+          // className="text-gray-600"
           aria-label="Listen"
         >
           <FaVolumeUp size={24} />
@@ -95,16 +95,16 @@ export default function SubjectWordDetailsDisplay({
       </div>
 
       {data.pronunciation && (
-        <p className="italic mt-2 text-gray-600">/{data.pronunciation}/</p>
+        <p className="italic mt-2">/{data.pronunciation}/</p>
       )}
 
       <div className="mt-6 flex flex-col lg:flex-row gap-8">
         {data.imageURL && (
-          <div className="w-full lg:w-1/2">
+          <div className="w-full sm:w-1/2">
             <img
               src={data.imageURL}
               alt={data.word}
-              className="w-full rounded-2xl shadow-md object-cover aspect-square"
+              className="w-full max-w-[400px] h-auto rounded-xl shadow-md object-cover"
             />
           </div>
         )}
