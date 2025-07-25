@@ -82,7 +82,7 @@ export default function SubjectWordDetailsDisplay({
       }}
     >
       <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold capitalize">
+        <h1 className="text-4xl font-bold capitalize text-blue-500">
           {data.word}
         </h1>
         <button

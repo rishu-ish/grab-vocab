@@ -21,7 +21,7 @@ export default function SubjectPage() {
     >
       <h1
         className="text-2xl font-bold mb-6 capitalize"
-        style={{ color: "var(--accent-color)" }}
+        // style={{ color: "var(--accent-color)" }}
       >
         Words for: {formattedSubject}
       </h1>

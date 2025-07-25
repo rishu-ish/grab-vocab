@@ -128,7 +128,7 @@ export default function WordDetailsDisplay({ term }: { term: string }) {
     }}
     >
       <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold capitalize">{result.word}</h1>
+        <h1 className="text-4xl font-bold capitalize text-blue-500">{result.word}</h1>
         <button onClick={() => speak(result.word)} aria-label="Listen">
           <FaVolumeHigh
             size={24}

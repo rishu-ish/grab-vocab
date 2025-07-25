@@ -212,11 +212,11 @@ export default function Header() {
         {/* Mobile Header */}
         <div className="flex items-center justify-between px-4 py-3 relative">
           <h1
-            className="text-2xl font-bold text-accent cursor-pointer hover:opacity-90 transition-opacity"
+            className="text-2xl font-bold text-accent cursor-pointer hover:opacity-90 transition-opacity text-blue-500"
             onClick={() => router.push("/")}
             style={{
-              fontFamily: "var(--font-heading)",
-              color: "var(--accent-color)",
+              // fontFamily: "var(--font-heading)",
+              // color: "var(--accent-color)",
             }}
           >
             <Image
@@ -428,7 +428,7 @@ export default function Header() {
           onClick={() => router.push("/")}
         >
           <Image src={grabvocab} alt="Logo" width={40} height={40} className="rounded" />
-          <h1 className="text-3xl font-bold" style={{ fontFamily: "var(--font-heading)", color: "var(--accent-color)" }}>
+          <h1 className="text-3xl font-bold text-blue-500" style={{ fontFamily: "var(--font-heading)" }}>
             GrabVocab
           </h1>
         </div>
