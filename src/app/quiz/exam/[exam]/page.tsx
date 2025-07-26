@@ -28,6 +28,8 @@ export default function ExamQuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const hasFetched = useRef(false);
@@ -38,6 +40,14 @@ export default function ExamQuizPage() {
     hasFetched.current = true;
     fetchQuizForExam(exam as string);
   }, [exam]);
+
+  // Reset image loading state when step changes and there's an image
+  useEffect(() => {
+    if (current?.imageURL) {
+      setIsImageLoading(true);
+      setImageError(false);
+    }
+  }, [step, current?.imageURL]);
 
   const fetchQuizForExam = async (exam: string) => {
     try {
@@ -63,6 +73,7 @@ export default function ExamQuizPage() {
       if (step + 1 < quiz.length) {
         setStep((s) => s + 1);
         setSelected(null);
+        setIsImageLoading(true); // Reset image loading state for next question
       } else {
         setShowResult(true);
       }
@@ -75,6 +86,8 @@ export default function ExamQuizPage() {
     setSelected(null);
     setShowResult(false);
     setSelectedAnswers([]);
+    setIsImageLoading(true); // Reset image loading state
+    setImageError(false);
   };
 
   const nextQuiz = () => {
@@ -125,6 +138,9 @@ export default function ExamQuizPage() {
                     src={q.imageURL}
                     alt={q.word}
                     className="w-full h-52 object-cover rounded mb-4"
+                    onError={(e) => {
+                      console.error('Failed to load image in results:', q.imageURL);
+                    }}
                   />
                 )}
 
@@ -194,11 +210,35 @@ export default function ExamQuizPage() {
 
           <div className="flex flex-col md:flex-row gap-6">
             {current.imageURL && (
-              <div className="md:w-1/2">
+              <div className="md:w-1/2 min-h-full w-full relative">
+                {isImageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-80 z-10 rounded-md">
+                    <span className="text-gray-500 animate-pulse">
+                      Loading image...
+                    </span>
+                  </div>
+                )}
+                {imageError && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-80 z-10 rounded-md">
+                    <span className="text-gray-500 text-center">
+                      Image failed to load
+                    </span>
+                  </div>
+                )}
                 <img
                   src={current.imageURL}
                   alt={current.word}
+                  onLoad={() => {
+                    setIsImageLoading(false);
+                    setImageError(false);
+                  }}
+                  onError={() => {
+                    setIsImageLoading(false);
+                    setImageError(true);
+                    console.error('Failed to load image:', current.imageURL);
+                  }}
                   className="w-full h-64 object-cover rounded-md"
+                  style={{ display: isImageLoading || imageError ? 'none' : 'block' }}
                 />
               </div>
             )}

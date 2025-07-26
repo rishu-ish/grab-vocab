@@ -66,10 +66,10 @@ export default function SharePage() {
         />
         <button
           onClick={fetchWordDetails}
-          className="mb-4 px-4 py-2 rounded transition hover:opacity-90"
+          className="mb-4 px-4 py-2 rounded transition hover:opacity-90 bg-indigo-600 text-white"
           style={{
-            backgroundColor: "var(--accent-color)",
-            color: "var(--button-text-color)",
+            // backgroundColor: "var(--accent-color)",
+            // color: "var(--button-text-color)",
           }}
         >
           Fetch Word Details

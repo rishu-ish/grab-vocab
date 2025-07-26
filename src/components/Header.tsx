@@ -422,47 +422,53 @@ export default function Header() {
       style={{ background: "var(--header-gradient)" }}
     >
       {/* Top Section */}
-      <div className="max-w-screen mx-auto flex flex-col px-4 py-3 gap-2 relative">
+      <div className="max-w-screen mx-auto flex items-center justify-between px-4 py-3 gap-4">
+        {/* Logo + Name */}
         <div
-          className="flex items-center justify-center gap-2 cursor-pointer"
+          className="flex items-center gap-2 cursor-pointer"
           onClick={() => router.push("/")}
         >
           <Image src={grabvocab} alt="Logo" width={40} height={40} className="rounded" />
-          <h1 className="text-3xl font-bold text-blue-500" style={{ fontFamily: "var(--font-heading)" }}>
+          <h1
+            className="text-3xl font-bold text-blue-500"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
             GrabVocab
           </h1>
         </div>
-        {/* Theme toggle button */}
-        <button
-          onClick={toggleTheme}
-          className="absolute right-8 top-2 p-3 rounded-full border shadow transition-all duration-300 ease-in-out bg-white"
-          style={{
-            color: "var(--primary-text-color)",
-            borderColor: "var(--border-color)",
-            transform: "scale(1)",
-            backgroundColor: "var(--background-color)",
-          }}
-          onMouseDown={e => (e.currentTarget.style.transform = "scale(0.9)")}
-          onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label="Toggle Theme"
-        >
-          {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
-        </button>
-        {isLoggedIn && (
-          <div
-            className="flex items-center justify-end gap-2 text-sm text-right px-3 pb-1 font-medium"
-            style={{ color: "var(--accent-color)" }}
-          >
-            <FaUser className="text-base" style={{ color: "var(--accent-color)" }} />
-            <span className="px-3 py-1 rounded-full border text-[#4dabf7] bg-[#e6f4ff] border-[#b5dcff] font-semibold">
-              {(user as any)?.username || (user as any)?.name || (user as any)?.email}
-            </span>
-          </div>
-        )}
-        <div className="flex justify-end flex-wrap gap-2 px-3">
+
+        {/* Buttons + User Info + Theme Toggle */}
+        <div className="flex items-center gap-3 flex-wrap justify-end">
           {topButtons.map((label) => (
             <HeaderButton key={label} label={label} />
           ))}
+
+          {isLoggedIn && (
+            <div
+              className="flex items-center gap-2 text-sm font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <FaUser className="text-base" style={{ color: "var(--accent-color)" }} />
+              <span className="px-3 py-1 rounded-full border text-[#4dabf7] bg-[#e6f4ff] border-[#b5dcff] font-semibold">
+                {(user as any)?.username || (user as any)?.name || (user as any)?.email}
+              </span>
+            </div>
+          )}
+
+          <button
+            onClick={toggleTheme}
+            className="p-3 rounded-full border shadow transition-all duration-300 ease-in-out"
+            style={{
+              color: "var(--primary-text-color)",
+              borderColor: "var(--border-color)",
+              backgroundColor: "var(--background-color)",
+            }}
+            onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.9)")}
+            onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            aria-label="Toggle Theme"
+          >
+            {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
+          </button>
         </div>
       </div>
 

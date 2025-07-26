@@ -20,8 +20,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" data-theme={theme}>
       <head>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8182196342340089"
-          crossOrigin="anonymous"></script>
         {/* iOS PWA support */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta

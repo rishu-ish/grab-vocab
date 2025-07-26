@@ -4,6 +4,7 @@
   --accent-color: #000000;
   --primary-color: #000000;
   --secondary-color: #000000;
+  --header-gradient: linear-gradient(120deg, #e5e3e3, #e5e3e3);
 
 
   
@@ -15,7 +16,6 @@
   --font-heading:  'Courier New', Courier, monospace;
   --font-body:  'Courier New', Courier, monospace;
 
-  --header-gradient: linear-gradient(120deg, #f5f5f5, #f5f5f5);
   /* NEW */
 }
 
@@ -30,6 +30,7 @@
   --accent-color: #ffffff;
   --primary-color: #ffffff;
   --secondary-color: #ffffff;
+  --header-gradient: linear-gradient(120deg, #454545, #454545);
 
 
 
@@ -38,7 +39,6 @@
   --border-color: #8c8989;
   --link-hover-color: #2563EB;
 
-  --header-gradient: linear-gradient(120deg, #1f1f1f, #1f1f1f);
   /* DARK HEADER */
 }
 
