@@ -98,18 +98,18 @@ export default function SubjectWordDetailsDisplay({
         <p className="italic mt-2">/{data.pronunciation}/</p>
       )}
 
-      <div className="mt-6 flex flex-col lg:flex-row gap-8">
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {data.imageURL && (
-          <div className="w-full sm:w-1/2">
+          <div className="col-span-1">
             <img
               src={data.imageURL}
               alt={data.word}
-              className="w-full max-w-[400px] h-auto rounded-xl shadow-md object-cover"
+              className="w-full max-w-full h-auto rounded-xl shadow-md object-cover"
             />
           </div>
         )}
 
-        <div className="w-full lg:w-1/2 space-y-4">
+        <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
           {data.meaning && (
             <div>
               <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -119,24 +119,9 @@ export default function SubjectWordDetailsDisplay({
             </div>
           )}
 
-          {data.partOfSpeech && (
-            <div>
-              <h2 className="text-xl font-semibold flex items-center gap-2">
-                <MdCategory /> Part of Speech
-              </h2>
-              <p>{data.partOfSpeech}</p>
-            </div>
-          )}
 
-          {data.wordForms?.length > 0 && (
-            <div>
-              <h2 className="text-xl font-semibold flex items-center gap-2">
-                <GiCardRandom /> Word Forms
-              </h2>
-              <p>{data.wordForms.join(", ")}</p>
-            </div>
-          )}
 
+          {/* Long + Short */}
           {data.exampleSentence && (
             <div>
               <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -146,24 +131,9 @@ export default function SubjectWordDetailsDisplay({
             </div>
           )}
 
-          {data.synonyms?.length > 0 && (
-            <div>
-              <h2 className="text-xl font-semibold flex items-center gap-2">
-                <MdOutlineSyncAlt /> Synonyms
-              </h2>
-              <p>{data.synonyms.join(", ")}</p>
-            </div>
-          )}
 
-          {data.antonyms?.length > 0 && (
-            <div>
-              <h2 className="text-xl font-semibold flex items-center gap-2">
-                <GiCancel /> Antonyms
-              </h2>
-              <p>{data.antonyms.join(", ")}</p>
-            </div>
-          )}
 
+          {/* Long + Short */}
           {data.memoryTrick && (
             <div>
               <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -181,6 +151,41 @@ export default function SubjectWordDetailsDisplay({
               <p>{data.origin}</p>
             </div>
           )}
+          {data.partOfSpeech && (
+            <div>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <MdCategory /> Part of Speech
+              </h2>
+              <p>{data.partOfSpeech}</p>
+            </div>
+          )}
+          {data.wordForms?.length > 0 && (
+            <div>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <GiCardRandom /> Word Forms
+              </h2>
+              <p>{data.wordForms.join(", ")}</p>
+            </div>
+          )}
+          {data.synonyms?.length > 0 && (
+            <div>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <MdOutlineSyncAlt /> Synonyms
+              </h2>
+              <p>{data.synonyms.join(", ")}</p>
+            </div>
+          )}
+
+          {/* Remaining short ones */}
+          {data.antonyms?.length > 0 && (
+            <div>
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <GiCancel /> Antonyms
+              </h2>
+              <p>{data.antonyms.join(", ")}</p>
+            </div>
+          )}
+
         </div>
       </div>
     </div>

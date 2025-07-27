@@ -5,9 +5,11 @@ import type { ReactNode } from "react";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
 import "@/theme/theme.css";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState("light");
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check for saved theme in localStorage
@@ -33,7 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           className="min-h-screen w-screen overflow-x-hidden"
           style={{ background: "var(--background-gradient)" }}
         >
-          <Header />
+          {pathname === "/" && <Header />}
           <main className=" w-screen main-container">{children}</main>
         </body>
       </SessionProviderWrapper>

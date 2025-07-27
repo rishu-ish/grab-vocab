@@ -418,7 +418,7 @@ export default function Header() {
   // Desktop Header
   console.log('Rendering desktop header');
   return (
-    <header className="top-0 z-50 shadow-md border-b bg-[#FFF5EC] border-[#F2E0D0]"
+    <header className="top-0 z-50 shadow-md bg-[#FFF5EC]"
       style={{ background: "var(--header-gradient)" }}
     >
       {/* Top Section */}

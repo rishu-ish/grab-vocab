@@ -13,7 +13,7 @@ export default function ExamPage() {
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 capitalize">
         Words for:{" "}
-        <span className="text-blue-900">
+        <span className="text-blue-500">
           {formattedExam.toUpperCase()}
         </span>
       </h1>
